@@ -1,13 +1,21 @@
-# Sample Hardhat Project
+# Kommune Staking Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
+Deployed Contracts:
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+Cypress 
+
+    * NodeManager       : 0x0
+    * NodeHandler       : 0x0
+    * KoKlay            : 0x0
+    * Treasury          : 0x0
+    * UnstakingReceiver : 0x0
+
+Baobab
+
+    * NodeManager       : 0x0
+    * NodeHandler       : 0x0
+    * KoKlay            : 0x0
+    * Treasury          : 0x0
+    * UnstakingReceiver : 0x0
 ```
