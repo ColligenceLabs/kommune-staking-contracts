@@ -58,7 +58,7 @@ contract CnStakingContract {
     address constant public ADDRESS_BOOK_ADDRESS = 0x0000000000000000000000000000000000000400;
     // uint256 constant public ONE_WEEK = 1 weeks;
     // For Test
-    uint256 constant public ONE_WEEK = 1 minutes;
+    uint256 constant public ONE_WEEK = 10 minutes;
 
     /*
      *  Enums

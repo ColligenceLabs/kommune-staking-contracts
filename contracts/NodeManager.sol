@@ -148,7 +148,8 @@ contract NodeManager is
         _setFeeRate(20_00);
         _setFeeDistribution(50, 50); // node : treasusy
         _setTreasury(treasuryAddress_);
-        _setNodeLockupTime(1 weeks);
+//        _setNodeLockupTime(1 weeks);
+        _setNodeLockupTime(10 minutes);
         _setUnstakeSplitThreshold(10_000e18);
 
         _grantRole(ROLE_FEE_MANAGER, _msgSender());
@@ -583,6 +584,23 @@ contract NodeManager is
             UnstakingRequest memory request = userToUnstakingRequest[user][i];
             if (block.timestamp >= request.claimableTimestamp) {
                 claimable += request.amount;
+            }
+        }
+    }
+
+    function getTotalPending(address user)
+    external
+    view
+    returns (uint256 pending)
+    {
+        uint256 userUnstakeCount = unstakeCount[user];
+        uint256 userClaimCount = claimCount[user];
+        if (userClaimCount >= userUnstakeCount) return 0;
+
+        for (uint256 i = userClaimCount + 1; i <= userUnstakeCount; i++) {
+            UnstakingRequest memory request = userToUnstakingRequest[user][i];
+            if (block.timestamp < request.claimableTimestamp) {
+                pending += request.amount;
             }
         }
     }
