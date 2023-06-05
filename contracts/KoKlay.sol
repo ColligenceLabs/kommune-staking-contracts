@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
 import "./library/KIP7Upgradeable.sol";
 import "./interfaces/IStKlay.sol";
@@ -16,7 +17,7 @@ import "./interfaces/INodeManager.sol";
  * @title StKlay Token Contract
  * @notice Stakes and unstakes KLAY <=> stKlay
  */
-contract StKlay is
+contract KoKlay is
     IKIP7,
     IStKlay,
     KIP7Upgradeable,
@@ -24,6 +25,8 @@ contract StKlay is
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {
+    using SafeMathUpgradeable for uint256;
+
     using AddressUpgradeable for address payable;
 
     address private constant ZERO_ADDRESS = address(0);
@@ -44,6 +47,9 @@ contract StKlay is
     /// @notice Amount of shares for each user
     mapping(address => uint256) private shares;
 
+    uint256 public totalStakers;
+    enum ChangeState { Unknown, Stake, Unstake, Cancel, Transfer }
+
     ///////////////////////////////////////////////////////////////////
     //     Events
     ///////////////////////////////////////////////////////////////////
@@ -51,12 +57,16 @@ contract StKlay is
     event SharesChanged(
         address indexed user,
         uint256 prevShares,
-        uint256 shares
+        uint256 shares,
+        uint256 amount,
+        ChangeState state
     );
     event RestakedFromManager(
         uint256 totalAmount,
         uint256 increaseAmount,
-        uint256 totalStaking
+        uint256 increaseShares,
+        uint256 totalStaking,
+        uint256 totalShares
     );
 
     ///////////////////////////////////////////////////////////////////
@@ -73,7 +83,7 @@ contract StKlay is
         validAddress(nodeManagerAddress)
     {
         __Context_init_unchained();
-        __KIP7_init_unchained("Stake.ly Staked KLAY", "stKLAY");
+        __KIP7_init_unchained("Kommune KLAY", "koKLAY");
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         __ReentrancyGuard_init_unchained();
@@ -195,9 +205,10 @@ contract StKlay is
     {
         totalRestaked += amount;
         totalStaking += amount;
+        uint256 increase = _getSharesByKlay(amount);
         if (totalShares > 0)
             stakingSharesRatio = (totalStaking * 10**27) / totalShares;
-        emit RestakedFromManager(totalRestaked, amount, totalStaking);
+        emit RestakedFromManager(totalRestaked, amount, increase, totalStaking, totalShares);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -305,7 +316,11 @@ contract StKlay is
     ) internal override whenNotPaused {
         _beforeTokenTransfer(from, to, amount);
 
-        _transferShares(from, to, _getSharesByKlay(amount));
+        _transferShares(from, to, _getSharesByKlay(amount), amount);
+
+        if (shares[from] == 0) totalStakers -= 1;
+        if (shares[to] == 0) totalStakers += 1;
+
         emit Transfer(from, to, amount);
 
         _afterTokenTransfer(from, to, amount);
@@ -329,7 +344,9 @@ contract StKlay is
     {
         uint256 sharesToMint = _getSharesByKlay(amount);
 
-        _mintShares(user, sharesToMint);
+        if (shares[user] == 0) totalStakers += 1;
+
+        _mintShares(user, sharesToMint, amount, false);
         totalStaking += amount;
 
         nodeManager.stake{value: amount}(user);
@@ -346,11 +363,13 @@ contract StKlay is
         address user = _msgSender();
 
         uint256 sharesToBurn = _getSharesByKlay(amount);
-        _burnShares(user, sharesToBurn);
+        _burnShares(user, sharesToBurn, amount);
 
         totalStaking -= amount;
 
         nodeManager.unstake(user, amount);
+
+        if (shares[user] == 0) totalStakers -= 1;
 
         emit Transfer(user, ZERO_ADDRESS, amount);
     }
@@ -367,7 +386,9 @@ contract StKlay is
         if (expired > 0) {
             uint256 sharesToMint = _getSharesByKlay(expired);
 
-            _mintShares(user, sharesToMint);
+            if (shares[user] == 0) totalStakers += 1;
+
+            _mintShares(user, sharesToMint, expired, true);
             totalStaking += expired;
 
             emit Transfer(ZERO_ADDRESS, user, expired);
@@ -380,7 +401,7 @@ contract StKlay is
      * @param amount amount to mint
      * Emits a `SharesChanged` event
      */
-    function _mintShares(address user, uint256 amount)
+    function _mintShares(address user, uint256 amount, uint256 klay, bool cancel)
         private
         validAddress(user)
         nonZero(amount)
@@ -389,7 +410,10 @@ contract StKlay is
         uint256 prevShares = sharesOf(user);
         shares[user] = prevShares + amount;
 
-        emit SharesChanged(user, prevShares, shares[user]);
+        if (cancel)
+            emit SharesChanged(user, prevShares, shares[user], klay, ChangeState.Cancel);
+        else
+            emit SharesChanged(user, prevShares, shares[user], klay, ChangeState.Stake);
     }
 
     /**
@@ -398,7 +422,7 @@ contract StKlay is
      * @param amount amount to burn
      * Emits a `SharesChanged` event
      */
-    function _burnShares(address user, uint256 amount)
+    function _burnShares(address user, uint256 amount, uint256 stKlay)
         private
         validAddress(user)
         nonZero(amount)
@@ -409,7 +433,7 @@ contract StKlay is
         totalShares -= amount;
         shares[user] = prevShares - amount;
 
-        emit SharesChanged(user, prevShares, shares[user]);
+        emit SharesChanged(user, prevShares, shares[user], stKlay, ChangeState.Unstake);
     }
 
     /**
@@ -419,10 +443,11 @@ contract StKlay is
      * @param amount amount to transfer
      * Emits a `SharesChanged` event
      */
-    function _transferShares(
+    function  _transferShares(
         address from,
         address to,
-        uint256 amount
+        uint256 amount,
+        uint256 stKlay
     ) private validAddress(from) validAddress(to) {
         uint256 fromShares = sharesOf(from);
         require(fromShares >= amount, "StKlay:: insufficient shares");
@@ -431,8 +456,8 @@ contract StKlay is
         uint256 toShares = sharesOf(to);
         shares[to] = toShares + amount;
 
-        emit SharesChanged(from, fromShares, shares[from]);
-        emit SharesChanged(to, toShares, shares[to]);
+        emit SharesChanged(from, fromShares, shares[from], stKlay, ChangeState.Transfer);
+        emit SharesChanged(to, toShares, shares[to], stKlay, ChangeState.Transfer);
     }
 
     /**
