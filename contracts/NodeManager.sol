@@ -139,6 +139,8 @@ contract NodeManager is
         initializer
         validAddress(treasuryAddress_)
     {
+        require(minKlayToOperate_ > 0, "Invalid value");
+
         __Context_init_unchained();
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
@@ -367,6 +369,7 @@ contract NodeManager is
      * @param feeRate_ new fee rate
      */
     function setFeeRate(uint16 feeRate_) external onlyRole(ROLE_FEE_MANAGER) {
+        require(feeRate_ <= 1_00_00, "Invalid value"); // Less than 100%
         _setFeeRate(feeRate_);
     }
 
