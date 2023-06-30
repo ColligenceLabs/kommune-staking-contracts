@@ -469,6 +469,14 @@ contract NodeManager is
         }
     }
 
+    function findDup(address _handler) internal view returns(bool result) {
+        result = false;
+        for (uint256 i = 1; i <= nodeCount; i++) {
+            if (nodeInfos[i].nodeHandler == INodeHandler(_handler)) return true;
+        }
+        return result;
+    }
+
     /**
      * @notice Adds new node
      * @param name name for the node
@@ -490,6 +498,7 @@ contract NodeManager is
             rewardAddress != address(0),
             "NodeManager:: reward address is zero"
         );
+        require(!findDup(nodeHandlerAddress), "Node Handle already registered");
 
         nodeId = nodeCount++;
         activeNodeCount++;
