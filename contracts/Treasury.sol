@@ -89,7 +89,9 @@ contract Treasury is
         emit Withdraw(address(0), amount, to, comment);
 
         //slither-disable-next-line missing-zero-check
-        payable(to).transfer(amount);
+        // payable(to).transfer(amount);
+        address payable recipient = payable(to);
+        recipient.sendValue(amount);
     }
 
     /**
