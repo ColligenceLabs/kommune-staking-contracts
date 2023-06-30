@@ -25,7 +25,7 @@ import "./interfaces/IWStKlay.sol";
  * @author Team Stakely
  * @notice Wraps and unwraps stKlay <=> wstKlay
  */
-contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
+contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable {
     using AddressUpgradeable for address payable;
 
     /// @notice StKlay token contract
@@ -119,7 +119,6 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function getWrappedAmount(uint256 amount)
         public
-        nonReentrant
         view
         returns (uint256 wrappedAmount)
     {
@@ -131,7 +130,6 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function getUnwrappedAmount(uint256 amount)
         public
-        nonReentrant
         view
         returns (uint256 unwrappedAmount)
     {
