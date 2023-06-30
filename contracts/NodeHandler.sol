@@ -80,6 +80,7 @@ contract NodeHandler is
     )
         external
         initializer
+        nonReentrant
         validAddress(nodeAddress_)
         validAddress(gcRewardAddress_)
         validAddress(nodeManagerAddress_)
@@ -289,7 +290,7 @@ contract NodeHandler is
     /**
      * @notice Updates gc staked amount based on staked total
      */
-    function updateGcStakedAmount() external onlyOwner {
+    function updateGcStakedAmount() external onlyOwner nonReentrant {
         gcStaking = node.staking() - protocolStaking;
     }
 

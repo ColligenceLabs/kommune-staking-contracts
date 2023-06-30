@@ -14,6 +14,7 @@ pragma solidity ^0.8.9;
 import "@klaytn/contracts/KIP/token/KIP7/IKIP7.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import "./library/KIP7Upgradeable.sol";
 import "./interfaces/IStKlay.sol";
@@ -79,6 +80,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function wrap(uint256 amount)
         external
+        nonReentrant
         override
         nonZero(amount)
         returns (uint256 wrappedAmount)
@@ -99,6 +101,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function unwrap(uint256 amount)
         external
+        nonReentrant
         override
         nonZero(amount)
         returns (uint256 unwrappedAmount)
@@ -116,6 +119,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function getWrappedAmount(uint256 amount)
         public
+        nonReentrant
         view
         returns (uint256 wrappedAmount)
     {
@@ -127,6 +131,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable {
      */
     function getUnwrappedAmount(uint256 amount)
         public
+        nonReentrant
         view
         returns (uint256 unwrappedAmount)
     {

@@ -841,6 +841,7 @@ contract NodeManager is
      */
     function _claim(address user)
         private
+        nonReentrant
         returns (uint256 totalClaimed, uint256 totalExpired)
     {
         uint256 userUnstakeCount = unstakeCount[user];
@@ -879,6 +880,7 @@ contract NodeManager is
 
     function _claimCallToNodeHandlers(address user, uint256 timeLimit)
         private
+        nonReentrant
         returns (uint256 totalClaimed, uint256 totalExpired)
     {
         for (uint256 i = 0; i < nodeCount; i++) {
