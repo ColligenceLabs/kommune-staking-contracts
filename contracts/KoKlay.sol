@@ -316,10 +316,11 @@ contract KoKlay is
     ) internal override whenNotPaused {
         _beforeTokenTransfer(from, to, amount);
 
+        uint256 before = shares[to];
         _transferShares(from, to, _getSharesByKlay(amount), amount);
 
         if (shares[from] == 0) totalStakers -= 1;
-        if (shares[to] == 0) totalStakers += 1;
+        if (before == 0 && shares[to] > 0) totalStakers += 1;
 
         emit Transfer(from, to, amount);
 
