@@ -53,6 +53,8 @@ contract NodeManager is
     bytes32 private constant ROLE_TREASURY_SETTER =
         keccak256("ROLE_TREASURY_SETTER");
 
+    uint256 constant public ONE_WEEK = 1 weeks;
+
     /// @notice stKlay token
     // slither-disable-next-line uninitialized-state
     IStKlay private stKlay;
@@ -391,6 +393,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
+        require(nodeLockupTime_ <= ONE_WEEK, "Lockup time too long");
         _setNodeLockupTime(nodeLockupTime_);
     }
 
@@ -412,6 +415,7 @@ contract NodeManager is
         onlyRole(ROLE_FEE_MANAGER)
         validBasisPoint(taxRate_)
     {
+        require(taxReceiver != address(0), "Set Tax Receiver first");
         taxRate = taxRate_;
         emit TaxRateChanged(taxRate_);
     }
@@ -439,6 +443,7 @@ contract NodeManager is
             nodeInfos[nodeId].rewardAddress != address(0),
             "NodeManager:: invalid nodeId"
         );
+        require(taxReceiver != address(0), "Set Tax Receiver first");
         taxFlag[nodeId] = flag;
     }
 
@@ -505,6 +510,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
+        require(nodeId <= nodeCount, "Invalid node id");
         nodeInfos[nodeId].name = name;
     }
 
@@ -512,6 +518,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
+        require(nodeId <= nodeCount, "Invalid node id");
         isUnstakingBlocked[nodeId] = isBlocked;
     }
 
@@ -537,6 +544,7 @@ contract NodeManager is
         onlyRole(ROLE_NODE_INFO_SETTER)
         validAddress(rewardAddress)
     {
+        require(nodeId <= nodeCount, "Invalid node id");
         nodeInfos[nodeId].rewardAddress = rewardAddress;
     }
 

@@ -131,6 +131,7 @@ contract NodeHandler is
     function stake() external payable onlyNodeManager nonReentrant {
         uint256 amount = msg.value;
         require(amount > 0, "NodeHandler:: msg.value is zero");
+        require(!isDisconnected, "node is unavailable");
 
         protocolStaking += amount;
         node.stakeKlay{value: amount}();
