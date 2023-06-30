@@ -75,6 +75,7 @@ contract Treasury is
             "Treasury:: not enough KLAY"
         );
         require(amount > 0, "Treasury:: amount is zero");
+        require(to != address(0), "Invalid recipient address");
         log[logCount] = WithdrawLog(
             block.timestamp,
             amount,

@@ -35,6 +35,7 @@ contract UnstakingReceiver is Ownable {
             isNodeHandler[msg.sender],
             "UnstakingReceiver:: Not nodeHandler"
         );
+        require(to != address(0), "Invalid recipient address");
         uint256 amount = address(this).balance;
         if (amount > 0) payable(to).sendValue(amount);
     }
