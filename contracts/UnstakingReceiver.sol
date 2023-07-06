@@ -19,6 +19,9 @@ contract UnstakingReceiver is Ownable {
 
     mapping(address => bool) private isNodeHandler;
 
+    event SetHandler(address, bool);
+    event Withdraw(address, uint256);
+
     constructor() {}
 
     receive() external payable {}
@@ -28,6 +31,7 @@ contract UnstakingReceiver is Ownable {
         onlyOwner
     {
         isNodeHandler[handler] = isNodeHandler_;
+        emit SetHandler(handler, isNodeHandler_);
     }
 
     function withdraw(address to) external {
@@ -38,5 +42,6 @@ contract UnstakingReceiver is Ownable {
         require(to != address(0), "Invalid recipient address");
         uint256 amount = address(this).balance;
         if (amount > 0) payable(to).sendValue(amount);
+        emit Withdraw(to, amount);
     }
 }

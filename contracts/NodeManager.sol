@@ -123,6 +123,21 @@ contract NodeManager is
     event TaxReceiverChanged(address indexed taxReceiver);
     event TaxCollected(uint256 indexed id, uint256 tax);
 
+    event UnstakeForRebalacing(uint256, uint256);
+    event UnstakeForDeregister(uint256);
+    event ClaimAndRestake(uint256, uint256);
+    event SetStKlayAddress(address);
+    event SetTaxFlag(uint256, bool);
+    event SetRoleAdmin(bytes32, address);
+    event Config(bytes32, uint256);
+    event AddNode(string, address, address);
+    event SetNodeName(uint256, string);
+    event SetUnstakingBlocked(uint256, bool);
+    event SetNodeRewardAddress(uint256, address);
+    event SetNodeLockupTime(uint256);
+    event SetUnstakeSplitThreshold(uint256);
+    event SetActive(uint256, bool, uint256);
+
     ///////////////////////////////////////////////////////////////////
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
@@ -298,6 +313,7 @@ contract NodeManager is
 
         //slither-disable-next-line unused-return
         nodeHandler.unstake(address(this), amount);
+        emit UnstakeForRebalacing(nodeId, amount);
     }
 
     /**
@@ -314,6 +330,7 @@ contract NodeManager is
 
         //slither-disable-next-line unused-return
         nodeHandler.unstakeForDeregister();
+        emit UnstakeForDeregister(nodeId);
     }
 
     /**
@@ -345,6 +362,7 @@ contract NodeManager is
         } else {
             _stake(address(this), totalClaimed);
         }
+        emit ClaimAndRestake(claimNodeId, stakeNodeId);
     }
 
     /**
@@ -357,6 +375,7 @@ contract NodeManager is
         validAddress(stKlayAddress)
     {
         stKlay = IStKlay(stKlayAddress);
+        emit SetStKlayAddress(stKlayAddress);
     }
 
     /**
@@ -443,10 +462,12 @@ contract NodeManager is
         );
         require(taxReceiver != address(0), "Set Tax Receiver first");
         taxFlag[nodeId] = flag;
+        emit SetTaxFlag(nodeId, flag);
     }
 
     function setRoleAdmin() external reinitializer(2) {
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        emit SetRoleAdmin(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     /**
@@ -465,6 +486,7 @@ contract NodeManager is
         } else {
             revert("NodeManager:: Parameter unrecognized");
         }
+        emit Config(what, data);
     }
 
     function findDup(address _handler) internal view returns(bool result) {
@@ -502,6 +524,7 @@ contract NodeManager is
         info.active = true;
         info.nodeHandler = INodeHandler(nodeHandlerAddress);
         info.rewardAddress = rewardAddress;
+        emit AddNode(name, nodeHandlerAddress, rewardAddress);
     }
 
     /**
@@ -515,6 +538,7 @@ contract NodeManager is
     {
         require(nodeId <= nodeCount, "Invalid node id");
         nodeInfos[nodeId].name = name;
+        emit SetNodeName(nodeId, name);
     }
 
     function setUnstakingBlocked(uint256 nodeId, bool isBlocked)
@@ -523,6 +547,7 @@ contract NodeManager is
     {
         require(nodeId <= nodeCount, "Invalid node id");
         isUnstakingBlocked[nodeId] = isBlocked;
+        emit SetUnstakingBlocked(nodeId, isBlocked);
     }
 
     /**
@@ -549,6 +574,7 @@ contract NodeManager is
     {
         require(nodeId <= nodeCount, "Invalid node id");
         nodeInfos[nodeId].rewardAddress = rewardAddress;
+        emit SetNodeRewardAddress(nodeId, rewardAddress);
     }
 
     /**
@@ -731,6 +757,8 @@ contract NodeManager is
      */
     function _setNodeLockupTime(uint256 nodeLockupTime_) private {
         nodeLockupTime = nodeLockupTime_;
+
+        emit SetNodeLockupTime(nodeLockupTime);
     }
 
     /**
@@ -738,6 +766,8 @@ contract NodeManager is
      */
     function _setUnstakeSplitThreshold(uint256 threshold) private {
         unstakeSplitThreshold = threshold;
+
+        emit SetUnstakeSplitThreshold(unstakeSplitThreshold);
     }
 
     function _setActive(uint256 nodeId, bool active) private {
@@ -752,6 +782,8 @@ contract NodeManager is
                 activeNodeCount--;
             }
         }
+
+        emit SetActive(nodeId, active, activeNodeCount);
     }
 
     /**

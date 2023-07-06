@@ -20,6 +20,9 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
     /// @notice StKlay token contract
     IStKlay private stKlay;
 
+    event Wrap(address, uint256);
+    event Unwrap(address, uint256);
+
     ///////////////////////////////////////////////////////////////////
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
@@ -80,6 +83,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
 
         bool success = stKlay.transferFrom(_msgSender(), address(this), amount);
         require(success, "WStKlay:: transfer failed");
+        emit Wrap(_msgSender(), amount);
     }
 
     /**
@@ -101,6 +105,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
 
         bool success = stKlay.transfer(_msgSender(), unwrappedAmount);
         require(success, "WStKlay:: transfer failed");
+        emit Unwrap(_msgSender(), unwrappedAmount);
     }
 
     /**

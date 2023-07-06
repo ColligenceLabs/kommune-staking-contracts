@@ -64,6 +64,10 @@ contract NodeHandler is
     event ClaimUnstakedFailed(uint256 amount);
     event UnstakingClaimed(address user, uint256 amount);
     event RewardClaimed(address to, uint256 amount);
+    event UpdateGcStakedAmount(uint256);
+    event SetGcRewardAddress(address);
+    event SetNodeManagerAddress(address);
+    event SetUnstakingReceiver(address);
 
     ///////////////////////////////////////////////////////////////////
     //     Initializer / Modifiers
@@ -293,6 +297,7 @@ contract NodeHandler is
      */
     function updateGcStakedAmount() external onlyOwner nonReentrant {
         gcStaking = node.staking() - protocolStaking;
+        emit UpdateGcStakedAmount(gcStaking);
     }
 
     /**
@@ -305,6 +310,7 @@ contract NodeHandler is
         validAddress(gcRewardAddress_)
     {
         gcRewardAddress = gcRewardAddress_;
+        emit SetGcRewardAddress(gcRewardAddress);
     }
 
     /**
@@ -318,6 +324,7 @@ contract NodeHandler is
     {
         //slither-disable-next-line events-access
         nodeManagerAddress = nodeManagerAddress_;
+        emit SetNodeManagerAddress(nodeManagerAddress);
     }
 
     /**
@@ -330,6 +337,7 @@ contract NodeHandler is
         validAddress(unstakingReceiverAddress)
     {
         unstakingReceiver = IUnstakingReceiver(unstakingReceiverAddress);
+        emit SetUnstakingReceiver(unstakingReceiverAddress);
     }
 
     ///////////////////////////////////////////////////////////////////
