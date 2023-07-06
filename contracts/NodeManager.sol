@@ -149,7 +149,7 @@ contract NodeManager is
         activeNodeCount = 0;
 
         _setFeeRate(20_00);
-        _setFeeDistribution(50, 50); // node : treasusy
+        _setFeeDistribution(50, 50); // node : treasury
         _setTreasury(treasuryAddress_);
         _setNodeLockupTime(1 weeks);
         _setUnstakeSplitThreshold(10_000e18);
@@ -279,7 +279,7 @@ contract NodeManager is
     ///////////////////////////////////////////////////////////////////
 
     /**
-     * @notice Unstakes from a specific node for rebalacing
+     * @notice Unstakes from a specific node for rebalancing
      * @param nodeId id of node to unstake
      * @param amount amount to unstake
      */
