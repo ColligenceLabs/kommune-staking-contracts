@@ -138,7 +138,7 @@ contract KoKlay is
      * @notice Deposits for sender
      * Emits a `Transfer` event from zero address to msgSender
      */
-    function stake() external payable whenNotPaused {
+    function stake() external payable whenNotPaused nonReentrant {
         nodeManager.distributeReward();
         _stake(_msgSender(), msg.value);
     }
@@ -148,7 +148,7 @@ contract KoKlay is
      * @param recipient address to deposit for
      * Emits a `Transfer` event from zero address to recipient
      */
-    function stakeFor(address recipient) external payable whenNotPaused {
+    function stakeFor(address recipient) external payable whenNotPaused nonReentrant {
         nodeManager.distributeReward();
         _stake(recipient, msg.value);
     }
@@ -158,7 +158,7 @@ contract KoKlay is
      * @param amount amount to unstake
      * Emits a `Transfer` event from msgSender to zero address
      */
-    function unstake(uint256 amount) external whenNotPaused {
+    function unstake(uint256 amount) external whenNotPaused nonReentrant {
         nodeManager.distributeReward();
         _unstake(amount);
     }
@@ -166,7 +166,7 @@ contract KoKlay is
     /**
      * @notice Claims unstaking requested funds
      */
-    function claim(address user) external whenNotPaused {
+    function claim(address user) external whenNotPaused nonReentrant {
         nodeManager.distributeReward();
         _claim(user);
     }
