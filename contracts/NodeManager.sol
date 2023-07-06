@@ -369,7 +369,7 @@ contract NodeManager is
      * @param feeRate_ new fee rate
      */
     function setFeeRate(uint16 feeRate_) external onlyRole(ROLE_FEE_MANAGER) {
-        require(feeRate_ <= 1_00_00, "Invalid value"); // Less than 100%
+        require(feeRate_ <= 30_00, "Too high fee rate"); // Less than 30%
         _setFeeRate(feeRate_);
     }
 
