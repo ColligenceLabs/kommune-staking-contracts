@@ -151,8 +151,7 @@ contract NodeManager is
         _setFeeRate(20_00);
         _setFeeDistribution(50, 50); // node : treasusy
         _setTreasury(treasuryAddress_);
-//        _setNodeLockupTime(1 weeks);
-        _setNodeLockupTime(10 minutes);
+        _setNodeLockupTime(1 weeks);
         _setUnstakeSplitThreshold(10_000e18);
 
         _grantRole(ROLE_FEE_MANAGER, _msgSender());
@@ -163,11 +162,8 @@ contract NodeManager is
 
         minKlayToOperate = minKlayToOperate_;
 
-//        claimMinimum = 1e19;
-//        distributeMinimum = 1e20;
-        // For Test
-        claimMinimum = 1e18;
-        distributeMinimum = 5e18;
+        claimMinimum = 1e19;
+        distributeMinimum = 1e20;
     }
 
     receive() external payable {}

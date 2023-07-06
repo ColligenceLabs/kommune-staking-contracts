@@ -1,14 +1,3 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
-//       ,
-//       )\
-//      /  \
-//     '  # '
-//     ',  ,'
-//       `'
-//   ___          ___  __
-//   )_  )   / /   )   ) )
-//  (   (__ (_/  _(_  /_/
-
 pragma solidity ^0.8.9;
 
 import "@klaytn/contracts/KIP/token/KIP7/IKIP7.sol";
@@ -45,7 +34,7 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
         validAddress(stKlayAddress)
     {
         __Pausable_init_unchained();
-        __KIP7_init_unchained("Stake.ly Wrapped stKLAY", "wstKLAY");
+        __KIP7_init_unchained("Kommune Wrapped KoKLAY", "wKoKLAY");
 
         stKlay = IStKlay(stKlayAddress);
     }
