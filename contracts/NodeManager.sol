@@ -137,7 +137,6 @@ contract NodeManager is
     )
         external
         initializer
-        validAddress(treasuryAddress_)
     {
         require(minKlayToOperate_ > 0, "Invalid value");
 
@@ -497,10 +496,6 @@ contract NodeManager is
         validAddress(rewardAddress)
         returns (uint256 nodeId)
     {
-        require(
-            rewardAddress != address(0),
-            "NodeManager:: reward address is zero"
-        );
         require(!findDup(nodeHandlerAddress), "Node Handle already registered");
 
         nodeId = nodeCount++;
