@@ -32,6 +32,7 @@
   "dependencies": {
     "@klaytn/contracts": "^1.0.6",
     "@openzeppelin/contracts": "^4.8.2",
-    "@openzeppelin/contracts-upgradeable": "^4.8.2"
+    "@openzeppelin/contracts-upgradeable": "^4.8.2",
+    "dotenv": "^16.3.1"
   }
 }

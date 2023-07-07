@@ -1,7 +1,11 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@openzeppelin/hardhat-upgrades";
+require("dotenv").config();
 
+const { RPC_API_KEY, PRIV_KEY, ETHERSCAN_API_KEY } = process.env;
+
+// @ts-ignore
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [
@@ -33,6 +37,12 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+  },
+  networks: {
+    baobab: {
+      url: `${RPC_API_KEY}`,
+      accounts: [PRIV_KEY],
+    },
   },
 };
 
