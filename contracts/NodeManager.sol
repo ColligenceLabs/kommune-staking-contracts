@@ -470,10 +470,10 @@ contract NodeManager is
         emit SetTaxFlag(nodeId, flag);
     }
 
-    function setRoleAdmin() external reinitializer(2) {
-        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        emit SetRoleAdmin(DEFAULT_ADMIN_ROLE, _msgSender());
-    }
+//    function setRoleAdmin() external reinitializer(2) {
+//        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+//        emit SetRoleAdmin(DEFAULT_ADMIN_ROLE, _msgSender());
+//    }
 
     /**
      * @notice Config function for data

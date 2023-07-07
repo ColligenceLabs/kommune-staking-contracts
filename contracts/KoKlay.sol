@@ -100,9 +100,9 @@ contract KoKlay is
         stakingSharesRatio = 10**18;
     }
 
-    function onUpgrade() external reinitializer(3) {
-        _grantRole(DEFAULT_ADMIN_ROLE, tx.origin);
-    }
+//    function onUpgrade() external reinitializer(3) {
+//        _grantRole(DEFAULT_ADMIN_ROLE, tx.origin);
+//    }
 
     receive() external payable {}
 
