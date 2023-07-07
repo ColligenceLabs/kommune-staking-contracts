@@ -73,6 +73,11 @@ contract KoKlay is
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Initializer for upgradeable StKlay contract
      * @param nodeManagerAddress nodeManager deployed address

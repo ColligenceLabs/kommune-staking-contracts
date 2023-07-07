@@ -1,14 +1,3 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
-//       ,
-//       )\
-//      /  \
-//     '  # '
-//     ',  ,'
-//       `'
-//   ___          ___  __
-//   )_  )   / /   )   ) )
-//  (   (__ (_/  _(_  /_/
-
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/Address.sol";

@@ -73,6 +73,11 @@ contract NodeHandler is
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Initializer for upgradeable NodeHandler Contract
      */

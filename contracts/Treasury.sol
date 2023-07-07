@@ -47,6 +47,11 @@ contract Treasury is
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /// @notice Initializer
     function initialize() external initializer {
         __Ownable_init_unchained();

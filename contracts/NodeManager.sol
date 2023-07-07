@@ -142,6 +142,11 @@ contract NodeManager is
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Initializer for upgradeable NodeManager contract
      * @param treasuryAddress_ treasury wallet address
