@@ -319,10 +319,18 @@ contract KoKlay is
         address to,
         uint256 amount
     ) internal override whenNotPaused {
+        require(amount > 0, "invalid amount");
+        require(_getSharesByKlay(amount) > 0, "invalid shares to transfer");
+
         _beforeTokenTransfer(from, to, amount);
 
         uint256 before = shares[to];
         _transferShares(from, to, _getSharesByKlay(amount), amount);
+        uint256 later = shares[to];
+
+        if (before > 0) {
+            require (later != 0 && later > before, "transfer shares failed");
+        }
 
         if (shares[from] == 0) totalStakers -= 1;
         if (before == 0 && shares[to] > 0) totalStakers += 1;
