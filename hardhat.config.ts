@@ -43,6 +43,10 @@ const config: HardhatUserConfig = {
       url: `${RPC_API_KEY}`,
       accounts: [PRIV_KEY],
     },
+    cypress: {
+      url: `${RPC_API_KEY}`,
+      accounts: [PRIV_KEY],
+    },
   },
 };
 
