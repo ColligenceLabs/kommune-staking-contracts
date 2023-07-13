@@ -94,6 +94,7 @@ contract KoKlay is
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         __ReentrancyGuard_init_unchained();
+        __Ownable_init_unchained();
 
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _grantRole(ROLE_PAUSER, _msgSender());

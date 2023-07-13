@@ -44,6 +44,7 @@ contract WKoKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
     {
         __Pausable_init_unchained();
         __KIP7_init_unchained("Kommune Wrapped KoKLAY", "wKoKLAY");
+        __Ownable_init_unchained();
 
         stKlay = IStKlay(stKlayAddress);
     }

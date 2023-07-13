@@ -166,6 +166,7 @@ contract NodeManager is
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         __ReentrancyGuard_init_unchained();
+        __Ownable_init_unchained();
 
         nodeCount = 0;
         activeNodeCount = 0;
