@@ -2,8 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TimelockV2 {
+contract TimelockV2 is Ownable {
     using SafeMath for uint;
 
     event NewAdmin(address indexed newAdmin);
