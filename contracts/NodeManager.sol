@@ -415,7 +415,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
-        require(nodeLockupTime_ <= ONE_WEEK, "Lockup time too long");
+        require(nodeLockupTime_ >= ONE_WEEK, "Lockup time too short");
         _setNodeLockupTime(nodeLockupTime_);
     }
 
@@ -496,7 +496,7 @@ contract NodeManager is
 
     function findDup(address _handler) internal view returns(bool result) {
         result = false;
-        for (uint256 i = 1; i <= nodeCount; i++) {
+        for (uint256 i = 0; i <= nodeCount; i++) {
             if (nodeInfos[i].nodeHandler == INodeHandler(_handler)) return true;
         }
         return result;
