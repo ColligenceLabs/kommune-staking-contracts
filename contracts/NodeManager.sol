@@ -545,8 +545,8 @@ contract NodeManager is
         info.rewardAddress = rewardAddress;
         emit AddNode(name, nodeHandlerAddress, rewardAddress);
 
-        // Revoke Roles from deploy owner after initial contract setup
-        if (stKlay != IStKlay(address(0)) && activeNodeCount > 0) {
+        // Revoke Roles from deploy owner right after initial contract setup
+        if (stKlay != IStKlay(address(0)) && activeNodeCount == 1 && owner() != multiSig) {
             revokeRoles();
         }
     }
