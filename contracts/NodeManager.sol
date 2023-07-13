@@ -104,6 +104,8 @@ contract NodeManager is
     /// @notice Determine whether sending tax seperately
     mapping(uint256 => bool) public taxFlag;
 
+    address public multiSig;
+
     ///////////////////////////////////////////////////////////////////
     //     Events
     ///////////////////////////////////////////////////////////////////
@@ -155,7 +157,8 @@ contract NodeManager is
      */
     function initialize(
         address treasuryAddress_,
-        uint256 minKlayToOperate_
+        uint256 minKlayToOperate_,
+        address multiSig_
     )
         external
         initializer
@@ -177,6 +180,14 @@ contract NodeManager is
         _setNodeLockupTime(1 weeks);
         _setUnstakeSplitThreshold(10_000e18);
 
+        multiSig = multiSig_;
+        _grantRole(ROLE_FEE_MANAGER, multiSig_);
+        _grantRole(ROLE_NODE_INFO_SETTER, multiSig_);
+        _grantRole(ROLE_STKLAY_SETTER, multiSig_);
+        _grantRole(ROLE_MIN_SETTER, multiSig_);
+        _grantRole(ROLE_TREASURY_SETTER, multiSig_);
+
+        // TODO : Revoke these roles right after initial contract setup
         _grantRole(ROLE_FEE_MANAGER, _msgSender());
         _grantRole(ROLE_NODE_INFO_SETTER, _msgSender());
         _grantRole(ROLE_STKLAY_SETTER, _msgSender());
@@ -1265,5 +1276,15 @@ contract NodeManager is
 
     function guardedDiv(uint256 a, uint256 b) private pure returns (uint256 c) {
         c = b == 0 ? 0 : a / b;
+    }
+
+    function revokeRoles() public onlyOwner {
+        require(owner() != multiSig, 'MultiSig wallet needs roles');
+
+        _revokeRole(ROLE_FEE_MANAGER, owner());
+        _revokeRole(ROLE_NODE_INFO_SETTER, owner());
+        _revokeRole(ROLE_STKLAY_SETTER, owner());
+        _revokeRole(ROLE_MIN_SETTER, owner());
+        _revokeRole(ROLE_TREASURY_SETTER, owner());
     }
 }

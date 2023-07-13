@@ -12,11 +12,11 @@ async function main() {
   const minKlayToOperate = ethers.utils.parseEther("1").toString();
   const nodeName = "Kommune";
   const delay = 2 * 25 * 3600; // 2 days
-  const multisig =
-    network.config.chainId === 1001
-      ? "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F"
-      : "0xf6C49616E680B42d36457D5aD202880a01AA85e1";
-
+  // const multisig =
+  //   network.config.chainId === 1001
+  //     ? "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F"
+  //     : "0xf6C49616E680B42d36457D5aD202880a01AA85e1";
+  const multisig = "0xb191FB3e1B1EB382F9AA7c750345f8B581dC345f"; // Peter's Test
   let tx;
   let receipt;
 
@@ -32,7 +32,7 @@ async function main() {
   const nodeManager = await ethers.getContractFactory("NodeManager");
   const NodeManager = await upgrades.deployProxy(
     nodeManager,
-    [Treasury.address, minKlayToOperate],
+    [Treasury.address, minKlayToOperate, multisig],
     {
       initializer: "initialize",
     }
@@ -101,6 +101,11 @@ async function main() {
   const Timelock = await timelock.deploy(multisig, delay);
   await Timelock.deployed();
   console.log("Timelock V2 deployed here", Timelock.address);
+
+  // Revoke Roles from NodeManager
+  tx = await NodeManager.revokeRoles();
+  receipt = await tx.wait();
+  console.log("NodeManager revokeRoles : ", receipt.transactionHash);
 
   // Transfer Ownerships to multisig wallet
   tx = await Treasury.transferOwnership(multisig);
