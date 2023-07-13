@@ -1,3 +1,7 @@
+/*
+ * npx hardhat run --network < baobab | cypress > scripts/deploy.ts
+ */
+
 import { ethers, upgrades, network } from "hardhat";
 
 async function main() {
@@ -47,7 +51,7 @@ async function main() {
   // NodeManager Transaction
   tx = await NodeManager.setStKlayAddress(KoKlay.address);
   receipt = await tx.wait();
-  console.log("NodeManager setStKlayAddress : ", receipt);
+  console.log("NodeManager setStKlayAddress : ", receipt.transactionHash);
 
   // UnStakingReceiver
   const unstakingReceiver = await ethers.getContractFactory(
@@ -77,12 +81,12 @@ async function main() {
   // NodeManager Transaction
   tx = await NodeManager.addNode(nodeName, NodeHandler.address, rewardAddress);
   receipt = await tx.wait();
-  console.log("NodeManager addNode : ", receipt);
+  console.log("NodeManager addNode : ", receipt.transactionHash);
 
   // UnStakingReceiver Transaction
   tx = await UnstakingReceiver.setHandler(NodeHandler.address, true);
   receipt = await tx.wait();
-  console.log("UnstakingReceiver setHandler : ", receipt);
+  console.log("UnstakingReceiver setHandler : ", receipt.transactionHash);
 
   // WKoKlay
   const wkoKlay = await ethers.getContractFactory("WKoKlay");
@@ -90,13 +94,45 @@ async function main() {
     initializer: "initialize",
   });
   await WKoKlay.deployed();
-  console.log("KoKlay deployed here", WKoKlay.address);
+  console.log("WKoKlay deployed here", WKoKlay.address);
 
   // Timerlock V2
   const timelock = await ethers.getContractFactory("TimelockV2");
   const Timelock = await timelock.deploy(multisig, delay);
   await Timelock.deployed();
   console.log("Timelock V2 deployed here", Timelock.address);
+
+  // Transfer Ownerships to multisig wallet
+  tx = await Treasury.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("Treasury transferOwnership : ", receipt.transactionHash);
+
+  tx = await NodeManager.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("NodeManager transferOwnership : ", receipt.transactionHash);
+
+  tx = await KoKlay.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("KoKlay transferOwnership : ", receipt.transactionHash);
+
+  tx = await UnstakingReceiver.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log(
+    "UnstakingReceiver transferOwnership : ",
+    receipt.transactionHash
+  );
+
+  tx = await NodeHandler.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("NodeHandler transferOwnership : ", receipt.transactionHash);
+
+  tx = await WKoKlay.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("WKoKlay transferOwnership : ", receipt.transactionHash);
+
+  tx = await Timelock.transferOwnership(multisig);
+  receipt = await tx.wait();
+  console.log("Timelock transferOwnership : ", receipt.transactionHash);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
