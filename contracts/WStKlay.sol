@@ -27,6 +27,11 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
     //     Initializer / Modifiers
     ///////////////////////////////////////////////////////////////////
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Initializer for WStKlay contract
      * @param stKlayAddress address for StKlay contract
