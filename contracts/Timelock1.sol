@@ -190,7 +190,7 @@ library SafeMath {
     }
 }
 
-// File: contracts/Timelock.sol
+// File: contracts/Timelock1.sol
 
 // COPIED FROM https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorAlpha.sol
 // Copyright 2020 Compound Labs, Inc.
@@ -208,7 +208,7 @@ pragma solidity 0.6.12;
 // XXX: import "./SafeMath.sol";
 
 
-contract Timelock {
+contract TimelockV1 {
     using SafeMath for uint;
 
     event NewAdmin(address indexed newAdmin);
