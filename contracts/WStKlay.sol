@@ -80,15 +80,15 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
         nonReentrant
         override
         nonZero(amount)
-        returns (uint256 wrappedAmount)
+        returns (uint256)
     {
-        wrappedAmount = getWrappedAmount(amount);
-
-        _mint(_msgSender(), wrappedAmount);
-
         bool success = stKlay.transferFrom(_msgSender(), address(this), amount);
         require(success, "WStKlay:: transfer failed");
+
+        _mint(_msgSender(), amount);
+
         emit Wrap(_msgSender(), amount);
+        return(amount);
     }
 
     /**
@@ -102,36 +102,36 @@ contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
         nonReentrant
         override
         nonZero(amount)
-        returns (uint256 unwrappedAmount)
+        returns (uint256)
     {
-        unwrappedAmount = getUnwrappedAmount(amount);
+         _burn(_msgSender(), amount);
 
-        _burn(_msgSender(), amount);
-
-        bool success = stKlay.transfer(_msgSender(), unwrappedAmount);
+        bool success = stKlay.transfer(_msgSender(), amount);
         require(success, "WStKlay:: transfer failed");
-        emit Unwrap(_msgSender(), unwrappedAmount);
+
+        emit Unwrap(_msgSender(), amount);
+        return(amount);
     }
 
     /**
      * @notice Returns amount of wstKlay for corresponding stKlay
      */
-    function getWrappedAmount(uint256 amount)
-        public
-        view
-        returns (uint256 wrappedAmount)
-    {
-        wrappedAmount = stKlay.getSharesByKlay(amount) / 10**9;
-    }
+//    function getWrappedAmount(uint256 amount)
+//        public
+//        view
+//        returns (uint256 wrappedAmount)
+//    {
+//        wrappedAmount = stKlay.getSharesByKlay(amount) / 10**9;
+//    }
 
     /**
      * @notice Returns amount of stKlay for corresponding wstKlay
      */
-    function getUnwrappedAmount(uint256 amount)
-        public
-        view
-        returns (uint256 unwrappedAmount)
-    {
-        unwrappedAmount = stKlay.getKlayByShares(amount * 10**9);
-    }
+//    function getUnwrappedAmount(uint256 amount)
+//        public
+//        view
+//        returns (uint256 unwrappedAmount)
+//    {
+//        unwrappedAmount = stKlay.getKlayByShares(amount * 10**9);
+//    }
 }
