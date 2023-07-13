@@ -544,6 +544,11 @@ contract NodeManager is
         info.nodeHandler = INodeHandler(nodeHandlerAddress);
         info.rewardAddress = rewardAddress;
         emit AddNode(name, nodeHandlerAddress, rewardAddress);
+
+        // Revoke Roles from deploy owner after initial contract setup
+        if (stKlay != IStKlay(address(0)) && activeNodeCount > 0) {
+            revokeRoles();
+        }
     }
 
     /**
@@ -1278,7 +1283,7 @@ contract NodeManager is
         c = b == 0 ? 0 : a / b;
     }
 
-    function revokeRoles() public onlyOwner {
+    function revokeRoles() private onlyOwner {
         require(owner() != multiSig, 'MultiSig wallet needs roles');
 
         _revokeRole(ROLE_FEE_MANAGER, owner());

@@ -103,9 +103,9 @@ async function main() {
   console.log("Timelock V2 deployed here", Timelock.address);
 
   // Revoke Roles from NodeManager
-  tx = await NodeManager.revokeRoles();
-  receipt = await tx.wait();
-  console.log("NodeManager revokeRoles : ", receipt.transactionHash);
+  // tx = await NodeManager.revokeRoles();
+  // receipt = await tx.wait();
+  // console.log("NodeManager revokeRoles : ", receipt.transactionHash);
 
   // Transfer Ownerships to multisig wallet
   tx = await Treasury.transferOwnership(multisig);
