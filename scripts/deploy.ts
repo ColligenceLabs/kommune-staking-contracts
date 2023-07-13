@@ -1,4 +1,4 @@
-import { ethers, upgrades } from "hardhat";
+import { ethers, upgrades, network } from "hardhat";
 
 async function main() {
   //
@@ -7,6 +7,12 @@ async function main() {
   const rewardAddress = "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73";
   const minKlayToOperate = ethers.utils.parseEther("1").toString();
   const nodeName = "Kommune";
+  const delay = 2 * 25 * 3600; // 2 days
+  const multisig =
+    network.config.chainId === 1001
+      ? "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F"
+      : "0xf6C49616E680B42d36457D5aD202880a01AA85e1";
+
   let tx;
   let receipt;
 
@@ -77,6 +83,20 @@ async function main() {
   tx = await UnstakingReceiver.setHandler(NodeHandler.address, true);
   receipt = await tx.wait();
   console.log("UnstakingReceiver setHandler : ", receipt);
+
+  // WKoKlay
+  const wkoKlay = await ethers.getContractFactory("WKoKlay");
+  const WKoKlay = await upgrades.deployProxy(wkoKlay, [KoKlay.address], {
+    initializer: "initialize",
+  });
+  await WKoKlay.deployed();
+  console.log("KoKlay deployed here", WKoKlay.address);
+
+  // Timerlock V2
+  const timelock = await ethers.getContractFactory("TimelockV2");
+  const Timelock = await timelock.deploy(multisig, delay);
+  await Timelock.deployed();
+  console.log("Timelock V2 deployed here", Timelock.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -14,7 +14,7 @@ import "./interfaces/IWStKlay.sol";
  * @author Team Stakely
  * @notice Wraps and unwraps stKlay <=> wstKlay
  */
-contract WStKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable {
+contract WKoKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable {
     using AddressUpgradeable for address payable;
 
     /// @notice StKlay token contract
