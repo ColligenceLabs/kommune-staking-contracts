@@ -1,13 +1,4 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
-//       ,
-//       )\
-//      /  \
-//     '  # '
-//     ',  ,'
-//       `'
-//   ___          ___  __
-//   )_  )   / /   )   ) )
-//  (   (__ (_/  _(_  /_/
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.9;
 
