@@ -56,6 +56,7 @@ contract NodeManager is
         keccak256("ROLE_TREASURY_SETTER");
 
     uint256 constant public ONE_WEEK = 1 weeks;
+    uint256 constant public TWO_WEEK = 2 weeks;
 
     /// @notice stKlay token
     // slither-disable-next-line uninitialized-state
@@ -430,6 +431,7 @@ contract NodeManager is
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
         require(nodeLockupTime_ >= ONE_WEEK, "Lockup time too short");
+        require(nodeLockupTime_ < TWO_WEEK, "Lockup time too long");
         _setNodeLockupTime(nodeLockupTime_);
     }
 
@@ -510,7 +512,7 @@ contract NodeManager is
 
     function findDup(address _handler) internal view returns(bool result) {
         result = false;
-        for (uint256 i = 0; i <= nodeCount; i++) {
+        for (uint256 i = 0; i <= nodeCount - 1; i++) {
             if (nodeInfos[i].nodeHandler == INodeHandler(_handler)) return true;
         }
         return result;
