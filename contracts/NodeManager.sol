@@ -512,6 +512,9 @@ contract NodeManager is
 
     function findDup(address _handler) internal view returns(bool result) {
         result = false;
+
+        if (nodeCount == 0) return result;
+
         for (uint256 i = 0; i <= nodeCount - 1; i++) {
             if (nodeInfos[i].nodeHandler == INodeHandler(_handler)) return true;
         }
