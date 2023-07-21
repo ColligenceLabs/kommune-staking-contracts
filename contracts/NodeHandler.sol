@@ -218,6 +218,7 @@ contract NodeHandler is
         }
 
         uint256 totalProcessed = 0;
+        uint256 start = userClaimCount;
 
         for (uint256 i = userClaimCount; i < userUnstakeCount; i++) {
             UnstakingInfo memory data = userToUnstakingData[user][i];
@@ -226,6 +227,18 @@ contract NodeHandler is
                 timeLimit >= data.claimableTimestamp
             ) {
                 userClaimCount++;
+            } else {
+                break;
+            }
+        }
+        claimCount[user] = userClaimCount;
+
+        for (uint256 i = start; i < userUnstakeCount; i++) {
+            UnstakingInfo memory data = userToUnstakingData[user][i];
+            if (
+                block.timestamp >= data.claimableTimestamp &&
+                timeLimit >= data.claimableTimestamp
+            ) {
                 uint256 id = data.id;
                 delete userToUnstakingData[user][i];
                 //slither-disable-next-line calls-loop
@@ -250,7 +263,6 @@ contract NodeHandler is
             }
         }
 
-        claimCount[user] = userClaimCount;
         unstakingRequested -= totalProcessed;
         protocolStaking -= totalClaimed;
         if (totalClaimed > 0) {

@@ -925,12 +925,6 @@ contract NodeManager is
         uint256 timeLimit = userToUnstakingRequest[user][safeCount]
             .claimableTimestamp;
 
-        //slither-disable-next-line reentrancy-no-eth
-        (totalClaimed, totalExpired) = _claimCallToNodeHandlers(
-            user,
-            timeLimit
-        );
-
         // Update unstaking records
         for (uint256 i = userClaimCount + 1; i <= safeCount; i++) {
             UnstakingRequest memory data = userToUnstakingRequest[user][i];
@@ -943,6 +937,12 @@ contract NodeManager is
             }
         }
         claimCount[user] = userClaimCount;
+
+        //slither-disable-next-line reentrancy-no-eth
+        (totalClaimed, totalExpired) = _claimCallToNodeHandlers(
+            user,
+            timeLimit
+        );
 
         emit Claimed(user, totalClaimed, totalExpired);
     }

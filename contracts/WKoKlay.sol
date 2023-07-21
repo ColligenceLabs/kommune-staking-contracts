@@ -86,10 +86,10 @@ contract WKoKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
         nonZero(amount)
         returns (uint256)
     {
+        _mint(_msgSender(), amount);
+
         bool success = stKlay.transferFrom(_msgSender(), address(this), amount);
         require(success, "WStKlay:: transfer failed");
-
-        _mint(_msgSender(), amount);
 
         emit Wrap(_msgSender(), amount);
         return(amount);
