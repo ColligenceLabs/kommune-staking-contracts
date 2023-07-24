@@ -565,7 +565,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
-        require(nodeId <= nodeCount, "Invalid node id");
+        require(nodeId < nodeCount, "Invalid node id");
         nodeInfos[nodeId].name = name;
         emit SetNodeName(nodeId, name);
     }
@@ -574,7 +574,7 @@ contract NodeManager is
         external
         onlyRole(ROLE_NODE_INFO_SETTER)
     {
-        require(nodeId <= nodeCount, "Invalid node id");
+        require(nodeId < nodeCount, "Invalid node id");
         isUnstakingBlocked[nodeId] = isBlocked;
         emit SetUnstakingBlocked(nodeId, isBlocked);
     }
@@ -601,7 +601,7 @@ contract NodeManager is
         onlyRole(ROLE_NODE_INFO_SETTER)
         validAddress(rewardAddress)
     {
-        require(nodeId <= nodeCount, "Invalid node id");
+        require(nodeId < nodeCount, "Invalid node id");
         nodeInfos[nodeId].rewardAddress = rewardAddress;
         emit SetNodeRewardAddress(nodeId, rewardAddress);
     }
