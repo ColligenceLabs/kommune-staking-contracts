@@ -175,7 +175,12 @@ contract NodeHandler is
      */
     function unstakeForDeregister() external onlyNodeManager nonReentrant {
         unstakingRequested = protocolStaking;
+
+        uint256 bCnt = unstakeCount[nodeManagerAddress];
         _unstake(nodeManagerAddress, protocolStaking);
+        uint256 aCnt = unstakeCount[nodeManagerAddress];
+        require (aCnt > bCnt, "unstakeForDeregister failed");
+
         isDisconnected = true;
     }
 
@@ -266,7 +271,10 @@ contract NodeHandler is
         unstakingRequested -= totalProcessed;
         protocolStaking -= totalClaimed;
         if (totalClaimed > 0) {
+            uint256 bBal = address(user).balance;
             unstakingReceiver.withdraw(user);
+            uint256 aBal = address(user).balance;
+            require (aBal > bBal, "claimUnstaked failed");
             emit UnstakingClaimed(user, totalClaimed);
         }
     }
@@ -298,8 +306,12 @@ contract NodeHandler is
         }
 
         // transfer reward to node manager
-        protocolReward += amount;
+        uint256 bBal = address(this).balance;
         payable(nodeManagerAddress).sendValue(amount);
+        uint256 aBal = address(this).balance;
+        require(aBal < bBal, "send to node manager failed");
+
+        protocolReward += amount;
         emit RewardClaimed(nodeManagerAddress, amount);
 
         return amount;
@@ -433,8 +445,10 @@ contract NodeHandler is
         //slither-disable-next-line reentrancy-benign
         node.submitApproveStakingWithdrawal(address(unstakingReceiver), amount);
 
-        uint256 userUnstakeCount = unstakeCount[user];
         (, , timestamp, ) = node.getApprovedStakingWithdrawalInfo(id);
+        require(timestamp != 0, "submitApproveStakingWithdrawal failed");
+
+        uint256 userUnstakeCount = unstakeCount[user];
         userToUnstakingData[user][userUnstakeCount] = UnstakingInfo(
             id,
             amount,

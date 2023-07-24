@@ -277,8 +277,9 @@ contract NodeManager is
         nonReentrant
         whenNotPaused
         onlyStKlay
+        returns(bool)
     {
-        _stake(from, msg.value);
+        return(_stake(from, msg.value));
     }
 
     /**
@@ -291,8 +292,9 @@ contract NodeManager is
         nonReentrant
         whenNotPaused
         onlyStKlay
+        returns(bool)
     {
-        _unstake(to, amount);
+       return(_unstake(to, amount));
     }
 
     /**
@@ -829,16 +831,17 @@ contract NodeManager is
         uint256 fee = (rewards * feeRate) / 1e4;
         uint256 reStaking = rewards - fee;
 
+        uint256 bBal = address(this).balance;
         stKlay.increaseTotalStaking(reStaking);
+        _stake(address(this), reStaking);
+        uint256 aBal = address(this).balance;
+        require(aBal < bBal, "distributeReward restaking failed");
 
         uint256 toNodeOperators = (fee * feeDistribution.operatorsRatio) / 100;
         _distributeFeeToNodeOperators(toNodeOperators);
 
         uint256 toTreasury = fee - toNodeOperators;
-
         payable(treasuryAddress).sendValue(toTreasury);
-
-        _stake(address(this), reStaking);
     }
 
     /**
@@ -847,7 +850,8 @@ contract NodeManager is
      * @param amount amount to stake
      * NOTE: subject to change depending on staking policy
      */
-    function _stake(address from, uint256 amount) private nonZero(amount) {
+    function _stake(address from, uint256 amount) private nonZero(amount) returns(bool result) {
+        result = false;
         require(activeNodeCount > 0, "NodeManager:: node count is zero");
 
         uint256[] memory distributions = _computeStakeDistributions(amount);
@@ -861,9 +865,10 @@ contract NodeManager is
 
             //slither-disable-next-line arbitrary-send-eth
             info.nodeHandler.stake{value: share}();
-        }
 
-        emit Staked(from, amount);
+            if (i == nodeCount) emit Staked(from, amount);
+        }
+        result = true;
     }
 
     /**
@@ -877,7 +882,9 @@ contract NodeManager is
         private
         validAddress(to)
         nonZero(amount)
+        returns(bool result)
     {
+        result = false;
         require(activeNodeCount > 0, "NodeManager:: node count is zero");
 
         uint256 count = unstakeCount[to] + 1;
@@ -902,9 +909,10 @@ contract NodeManager is
 
             //slither-disable-next-line unused-return
             info.nodeHandler.unstake(to, share);
-        }
 
-        emit UnstakingRequested(to, amount, claimableTimestamp);
+            if (i == nodeCount) emit UnstakingRequested(to, amount, claimableTimestamp);
+        }
+        result = true;
     }
 
     /**

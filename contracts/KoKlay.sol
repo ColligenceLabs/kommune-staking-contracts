@@ -356,9 +356,13 @@ contract KoKlay is
         _mintShares(user, sharesToMint, amount, false);
         totalStaking += amount;
 
-        nodeManager.stake{value: amount}(user);
+        bool result = nodeManager.stake{value: amount}(user);
 
-        emit Transfer(ZERO_ADDRESS, user, amount);
+        if (result) {
+            emit Transfer(ZERO_ADDRESS, user, amount);
+        } else {
+            revert("stake failed");
+        }
     }
 
     /**
@@ -374,11 +378,14 @@ contract KoKlay is
 
         totalStaking -= amount;
 
-        nodeManager.unstake(user, amount);
+        bool result = nodeManager.unstake(user, amount);
 
-        if (shares[user] == 0) totalStakers -= 1;
-
-        emit Transfer(user, ZERO_ADDRESS, amount);
+        if (result) {
+            if (shares[user] == 0) totalStakers -= 1;
+            emit Transfer(user, ZERO_ADDRESS, amount);
+        } else {
+            revert("unstake failed");
+        }
     }
 
     /**

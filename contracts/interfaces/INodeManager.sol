@@ -49,9 +49,9 @@ interface INodeManager {
 
     function distributeReward() external;
 
-    function stake(address from) external payable;
+    function stake(address from) external payable returns (bool);
 
-    function unstake(address to, uint256 amount) external;
+    function unstake(address to, uint256 amount) external returns (bool);
 
     function claim(address user)
     external
