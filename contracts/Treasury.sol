@@ -6,7 +6,6 @@ import "@klaytn/contracts/KIP/token/KIP7/IKIP7.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./interfaces/ITreasury.sol";
 
@@ -21,7 +20,6 @@ contract Treasury is
     OwnableUpgradeable,
     ReentrancyGuardUpgradeable
 {
-    using SafeMath for uint256;
     using AddressUpgradeable for address;
     using AddressUpgradeable for address payable;
 
@@ -120,18 +118,11 @@ contract Treasury is
         );
         logCount++;
 
-        uint256 bBal = IKIP7(tokenAddress).balanceOf(address(this));
+        emit Withdraw(tokenAddress, amount, to, comment);
         require(
             IKIP7(tokenAddress).transfer(to, amount),
             "Treasury:: transfer failed"
         );
-        uint256 aBal = IKIP7(tokenAddress).balanceOf(address(this));
-
-        if (aBal == bBal.add(amount)) {
-            emit Withdraw(tokenAddress, amount, to, comment);
-        } else {
-            revert("withdrawToken failed");
-        }
     }
 
     /**

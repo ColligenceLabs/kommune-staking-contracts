@@ -147,8 +147,8 @@ contract KoKlay is
      * Emits a `Transfer` event from zero address to msgSender
      */
     function stake() external payable whenNotPaused nonReentrant {
-        nodeManager.distributeReward();
         _stake(_msgSender(), msg.value);
+        nodeManager.distributeReward();
     }
 
     /**
@@ -157,8 +157,8 @@ contract KoKlay is
      * Emits a `Transfer` event from zero address to recipient
      */
     function stakeFor(address recipient) external payable whenNotPaused nonReentrant {
-        nodeManager.distributeReward();
         _stake(recipient, msg.value);
+        nodeManager.distributeReward();
     }
 
     /**
@@ -167,16 +167,16 @@ contract KoKlay is
      * Emits a `Transfer` event from msgSender to zero address
      */
     function unstake(uint256 amount) external whenNotPaused nonReentrant {
-        nodeManager.distributeReward();
         _unstake(amount);
+        nodeManager.distributeReward();
     }
 
     /**
      * @notice Claims unstaking requested funds
      */
     function claim(address user) external whenNotPaused nonReentrant {
-        nodeManager.distributeReward();
         _claim(user);
+        nodeManager.distributeReward();
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -356,13 +356,9 @@ contract KoKlay is
         _mintShares(user, sharesToMint, amount, false);
         totalStaking += amount;
 
-        bool result = nodeManager.stake{value: amount}(user);
+        emit Transfer(ZERO_ADDRESS, user, amount);
 
-        if (result) {
-            emit Transfer(ZERO_ADDRESS, user, amount);
-        } else {
-            revert("stake failed");
-        }
+        nodeManager.stake{value: amount}(user);
     }
 
     /**
@@ -378,14 +374,11 @@ contract KoKlay is
 
         totalStaking -= amount;
 
-        bool result = nodeManager.unstake(user, amount);
+        emit Transfer(user, ZERO_ADDRESS, amount);
 
-        if (result) {
-            if (shares[user] == 0) totalStakers -= 1;
-            emit Transfer(user, ZERO_ADDRESS, amount);
-        } else {
-            revert("unstake failed");
-        }
+        nodeManager.unstake(user, amount);
+
+        if (shares[user] == 0) totalStakers -= 1;
     }
 
     /**
