@@ -348,6 +348,7 @@ contract KoKlay is
         private
         validAddress(user)
         nonZero(amount)
+        nonReentrant
     {
         uint256 sharesToMint = _getSharesByKlay(amount);
 
@@ -366,7 +367,7 @@ contract KoKlay is
      * @param amount amount to unstake
      * Emits a `Transfer` event from msgSender to zero address
      */
-    function _unstake(uint256 amount) private nonZero(amount) {
+    function _unstake(uint256 amount) private nonZero(amount) nonReentrant {
         address user = _msgSender();
 
         uint256 sharesToBurn = _getSharesByKlay(amount);
@@ -385,7 +386,7 @@ contract KoKlay is
      * @notice Claims unstaking requested tokens
      * @param user address to claim unstaked
      */
-    function _claim(address user) private validAddress(user) {
+    function _claim(address user) private validAddress(user) nonReentrant {
         //slither-disable-next-line reentrancy-benign
         (, uint256 expired) = nodeManager.claim(user);
 

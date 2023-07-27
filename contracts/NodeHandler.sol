@@ -294,9 +294,11 @@ contract NodeHandler is
             amountGC = (amount * gcStaking) / totalStaking();
             gcReward += amountGC;
             amount -= amountGC;
+            protocolReward -= amountGC;
+
+            emit RewardClaimed(gcRewardAddress, amountGC);
             //slither-disable-next-line reentrancy-benign
             payable(gcRewardAddress).sendValue(amountGC);
-            emit RewardClaimed(gcRewardAddress, amountGC);
         }
 
         // transfer reward to node manager
