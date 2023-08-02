@@ -147,8 +147,8 @@ contract KoKlay is
      * Emits a `Transfer` event from zero address to msgSender
      */
     function stake() external payable whenNotPaused nonReentrant {
-        _stake(_msgSender(), msg.value);
         nodeManager.distributeReward();
+        _stake(_msgSender(), msg.value);
     }
 
     /**
@@ -157,8 +157,8 @@ contract KoKlay is
      * Emits a `Transfer` event from zero address to recipient
      */
     function stakeFor(address recipient) external payable whenNotPaused nonReentrant {
-        _stake(recipient, msg.value);
         nodeManager.distributeReward();
+        _stake(recipient, msg.value);
     }
 
     /**
@@ -167,16 +167,16 @@ contract KoKlay is
      * Emits a `Transfer` event from msgSender to zero address
      */
     function unstake(uint256 amount) external whenNotPaused nonReentrant {
-        _unstake(amount);
         nodeManager.distributeReward();
+        _unstake(amount);
     }
 
     /**
      * @notice Claims unstaking requested funds
      */
     function claim(address user) external whenNotPaused nonReentrant {
-        _claim(user);
         nodeManager.distributeReward();
+        _claim(user);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -348,7 +348,6 @@ contract KoKlay is
         private
         validAddress(user)
         nonZero(amount)
-        nonReentrant
     {
         uint256 sharesToMint = _getSharesByKlay(amount);
 
@@ -367,7 +366,7 @@ contract KoKlay is
      * @param amount amount to unstake
      * Emits a `Transfer` event from msgSender to zero address
      */
-    function _unstake(uint256 amount) private nonZero(amount) nonReentrant {
+    function _unstake(uint256 amount) private nonZero(amount) {
         address user = _msgSender();
 
         uint256 sharesToBurn = _getSharesByKlay(amount);
@@ -386,7 +385,7 @@ contract KoKlay is
      * @notice Claims unstaking requested tokens
      * @param user address to claim unstaked
      */
-    function _claim(address user) private validAddress(user) nonReentrant {
+    function _claim(address user) private validAddress(user) {
         //slither-disable-next-line reentrancy-benign
         (, uint256 expired) = nodeManager.claim(user);
 
