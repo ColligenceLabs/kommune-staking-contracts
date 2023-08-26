@@ -84,10 +84,11 @@ contract KoKlay is
      * @notice Initializer for upgradeable StKlay contract
      * @param nodeManagerAddress nodeManager deployed address
      */
-    function initialize(address nodeManagerAddress)
+    function initialize(address nodeManagerAddress, address timelock)
         external
         initializer
         validAddress(nodeManagerAddress)
+        validAddress(timelock)
     {
         __Context_init_unchained();
         __KIP7_init_unchained("Kommune KLAY", "koKLAY");
@@ -96,8 +97,8 @@ contract KoKlay is
         __ReentrancyGuard_init_unchained();
         __Ownable_init_unchained();
 
-        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _grantRole(ROLE_PAUSER, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, timelock);
+        _grantRole(ROLE_PAUSER, timelock);
 
         nodeManager = INodeManager(nodeManagerAddress);
         stakingSharesRatio = 10**18;

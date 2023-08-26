@@ -33,6 +33,10 @@ async function main() {
   });
   await Treasury.deployed();
   console.log("Treasury deployed here", Treasury.address);
+  await upgrades.admin.changeProxyAdmin(
+      Treasury.address,
+      Timelock.address
+  );
 
   // NodeManager
   const nodeManager = await ethers.getContractFactory("NodeManager");
@@ -45,14 +49,22 @@ async function main() {
   );
   await NodeManager.deployed();
   console.log("NodeManager deployed here", NodeManager.address);
+  await upgrades.admin.changeProxyAdmin(
+      NodeManager.address,
+      Timelock.address
+  );
 
   // KoKlay
   const koKlay = await ethers.getContractFactory("KoKlay");
-  const KoKlay = await upgrades.deployProxy(koKlay, [NodeManager.address], {
+  const KoKlay = await upgrades.deployProxy(koKlay, [NodeManager.address, Timelock.address]], {
     initializer: "initialize",
   });
   await KoKlay.deployed();
   console.log("KoKlay deployed here", KoKlay.address);
+  await upgrades.admin.changeProxyAdmin(
+      KoKlay.address,
+      Timelock.address
+  );
 
   // NodeManager Transaction
   tx = await NodeManager.setStKlayAddress(KoKlay.address);
@@ -83,6 +95,10 @@ async function main() {
   );
   await NodeHandler.deployed();
   console.log("NodeHandler deployed here", NodeHandler.address);
+  await upgrades.admin.changeProxyAdmin(
+      NodeHandler.address,
+      Timelock.address
+  );
 
   // NodeManager Transaction
   tx = await NodeManager.addNode(nodeName, NodeHandler.address, rewardAddress);
@@ -101,6 +117,10 @@ async function main() {
   });
   await WKoKlay.deployed();
   console.log("WKoKlay deployed here", WKoKlay.address);
+  await upgrades.admin.changeProxyAdmin(
+      WKoKlay.address,
+      Timelock.address
+  );
 
   // Revoke Roles from NodeManager
   // tx = await NodeManager.revokeRoles();
