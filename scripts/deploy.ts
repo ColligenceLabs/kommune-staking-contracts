@@ -147,6 +147,10 @@ async function main() {
   tx = await Timelock.transferOwnership(Timelock.address);
   receipt = await tx.wait();
   console.log("Timelock transferOwnership : ", receipt.transactionHash);
+
+  tx = await NodeManager.revokeDeployerRoles();
+  receipt = await tx.wait();
+  console.log("NodeManager revokeDeployerRoles : ", receipt.transactionHash);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

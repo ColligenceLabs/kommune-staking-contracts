@@ -189,11 +189,11 @@ contract NodeManager is
         _grantRole(ROLE_TREASURY_SETTER, multiSig_);
 
         // TODO : Revoke these roles right after initial contract setup
-        // _grantRole(ROLE_FEE_MANAGER, _msgSender());
-        // _grantRole(ROLE_NODE_INFO_SETTER, _msgSender());
-        // _grantRole(ROLE_STKLAY_SETTER, _msgSender());
-        // _grantRole(ROLE_MIN_SETTER, _msgSender());
-        // _grantRole(ROLE_TREASURY_SETTER, _msgSender());
+        _grantRole(ROLE_FEE_MANAGER, _msgSender());
+        _grantRole(ROLE_NODE_INFO_SETTER, _msgSender());
+        _grantRole(ROLE_STKLAY_SETTER, _msgSender());
+        _grantRole(ROLE_MIN_SETTER, _msgSender());
+        _grantRole(ROLE_TREASURY_SETTER, _msgSender());
 
         minKlayToOperate = minKlayToOperate_;
 
@@ -202,6 +202,14 @@ contract NodeManager is
     }
 
     receive() external payable {}
+
+    function revokeDeployerRoles() public {
+        _revokeRole(ROLE_FEE_MANAGER, _msgSender());
+        _revokeRole(ROLE_NODE_INFO_SETTER, _msgSender());
+        _revokeRole(ROLE_STKLAY_SETTER, _msgSender());
+        _revokeRole(ROLE_MIN_SETTER, _msgSender());
+        _revokeRole(ROLE_TREASURY_SETTER, _msgSender());
+    }
 
     /**
      * @notice Checks if value is not zero
