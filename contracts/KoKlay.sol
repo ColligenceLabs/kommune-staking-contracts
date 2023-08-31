@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+//import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./library/KIP7Upgradeable.sol";
 import "./interfaces/IStKlay.sol";
@@ -24,8 +24,8 @@ contract KoKlay is
     KIP7Upgradeable,
     AccessControlUpgradeable,
     PausableUpgradeable,
-    ReentrancyGuardUpgradeable,
-    OwnableUpgradeable
+    ReentrancyGuardUpgradeable
+//    OwnableUpgradeable
 {
     using SafeMathUpgradeable for uint256;
 
@@ -95,7 +95,7 @@ contract KoKlay is
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         __ReentrancyGuard_init_unchained();
-        __Ownable_init_unchained();
+//        __Ownable_init_unchained();
 
         _grantRole(DEFAULT_ADMIN_ROLE, timelock);
         _grantRole(ROLE_PAUSER, timelock);

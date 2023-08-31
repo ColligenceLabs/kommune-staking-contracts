@@ -6,7 +6,7 @@ import "@klaytn/contracts/KIP/token/KIP7/IKIP7.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+//import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./library/KIP7Upgradeable.sol";
 import "./interfaces/IStKlay.sol";
@@ -17,7 +17,15 @@ import "./interfaces/IWStKlay.sol";
  * @author Team Stakely
  * @notice Wraps and unwraps stKlay <=> wstKlay
  */
-contract WKoKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
+contract WKoKlay is
+    IKIP7,
+    IWStKlay,
+    KIP7Upgradeable,
+    PausableUpgradeable,
+    ReentrancyGuardUpgradeable
+//    OwnableUpgradeable
+{
+
     using AddressUpgradeable for address payable;
 
     /// @notice StKlay token contract
@@ -46,7 +54,7 @@ contract WKoKlay is IKIP7, IWStKlay, KIP7Upgradeable, PausableUpgradeable, Reent
     {
         __Pausable_init_unchained();
         __KIP7_init_unchained("Kommune Wrapped KoKLAY", "wKoKLAY");
-        __Ownable_init_unchained();
+//        __Ownable_init_unchained();
 
         stKlay = IStKlay(stKlayAddress);
     }
