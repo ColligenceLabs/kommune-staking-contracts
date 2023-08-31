@@ -45,6 +45,7 @@ contract Treasury is
 
     /// @notice Initializer
     function initialize() external initializer {
+        __Context_init_unchained();
         __Ownable_init_unchained();
         __ReentrancyGuard_init_unchained();
         logCount = 0;
