@@ -40,11 +40,11 @@ const config: HardhatUserConfig = {
   },
   networks: {
     baobab: {
-      url: `${RPC_API_KEY}`,
+      url: "https://public-node-api.klaytnapi.com/v1/baobab",
       accounts: [PRIV_KEY],
     },
     cypress: {
-      url: `${RPC_API_KEY}`,
+      url: "https://public-node-api.klaytnapi.com/v1/cypress",
       accounts: [PRIV_KEY],
     },
   },
