@@ -204,16 +204,6 @@ contract NodeManager is
 
     receive() external payable {}
 
-    function revokeDeployerRoles() public {
-        _revokeRole(ROLE_FEE_MANAGER, _msgSender());
-        _revokeRole(ROLE_NODE_INFO_SETTER, _msgSender());
-        _revokeRole(ROLE_STKLAY_SETTER, _msgSender());
-        _revokeRole(ROLE_MIN_SETTER, _msgSender());
-        _revokeRole(ROLE_TREASURY_SETTER, _msgSender());
-
-        emit RevokeDeployerRoles(_msgSender());
-    }
-
     /**
      * @notice Checks if value is not zero
      * @param value uint256 to check
@@ -1301,10 +1291,10 @@ contract NodeManager is
     function revokeRoles() private onlyOwner {
         require(owner() != multiSig, 'MultiSig wallet needs roles');
 
-        _revokeRole(ROLE_FEE_MANAGER, owner());
-        _revokeRole(ROLE_NODE_INFO_SETTER, owner());
-        _revokeRole(ROLE_STKLAY_SETTER, owner());
-        _revokeRole(ROLE_MIN_SETTER, owner());
-        _revokeRole(ROLE_TREASURY_SETTER, owner());
+        _revokeRole(ROLE_FEE_MANAGER, _msgSender());
+        _revokeRole(ROLE_NODE_INFO_SETTER, _msgSender());
+        _revokeRole(ROLE_STKLAY_SETTER, _msgSender());
+        _revokeRole(ROLE_MIN_SETTER, _msgSender());
+        _revokeRole(ROLE_TREASURY_SETTER, _msgSender());
     }
 }
