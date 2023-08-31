@@ -1288,6 +1288,8 @@ contract NodeManager is
         c = b == 0 ? 0 : a / b;
     }
 
+    // During deployment and setup ...
+    // Run once to revoke Roles from deployer before ownership transferred to the multi-sig wallet
     function revokeRoles() private onlyOwner {
         require(owner() != multiSig, 'MultiSig wallet needs roles');
 
