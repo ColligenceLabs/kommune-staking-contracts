@@ -125,9 +125,9 @@ async function main() {
   receipt = await tx.wait();
   console.log("NodeManager transferOwnership : ", receipt.transactionHash);
 
-  tx = await KoKlay.transferOwnership(Timelock.address);
-  receipt = await tx.wait();
-  console.log("KoKlay transferOwnership : ", receipt.transactionHash);
+  // tx = await KoKlay.transferOwnership(Timelock.address);
+  // receipt = await tx.wait();
+  // console.log("KoKlay transferOwnership : ", receipt.transactionHash);
 
   tx = await UnstakingReceiver.transferOwnership(Timelock.address);
   receipt = await tx.wait();
@@ -140,13 +140,13 @@ async function main() {
   receipt = await tx.wait();
   console.log("NodeHandler transferOwnership : ", receipt.transactionHash);
 
-  tx = await WKoKlay.transferOwnership(Timelock.address);
-  receipt = await tx.wait();
-  console.log("WKoKlay transferOwnership : ", receipt.transactionHash);
+  // tx = await WKoKlay.transferOwnership(Timelock.address);
+  // receipt = await tx.wait();
+  // console.log("WKoKlay transferOwnership : ", receipt.transactionHash);
 
-  tx = await Timelock.transferOwnership(Timelock.address);
-  receipt = await tx.wait();
-  console.log("Timelock transferOwnership : ", receipt.transactionHash);
+  // tx = await Timelock.transferOwnership(Timelock.address);
+  // receipt = await tx.wait();
+  // console.log("Timelock transferOwnership : ", receipt.transactionHash);
 
   tx = await NodeManager.revokeDeployerRoles();
   receipt = await tx.wait();
