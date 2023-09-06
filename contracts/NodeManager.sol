@@ -176,7 +176,7 @@ contract NodeManager is
         nodeCount = 0;
         activeNodeCount = 0;
 
-        _setFeeRate(20_00);
+        _setFeeRate(10_00);
         _setFeeDistribution(50, 50); // node : treasury
         _setTreasury(treasuryAddress_);
         _setNodeLockupTime(1 weeks);
