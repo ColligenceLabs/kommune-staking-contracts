@@ -142,7 +142,6 @@ contract NodeManager is
     event SetNodeLockupTime(uint256);
     event SetUnstakeSplitThreshold(uint256);
     event SetActive(uint256, bool, uint256);
-    event RevokeDeployerRoles(address);
 
     ///////////////////////////////////////////////////////////////////
     //     Initializer / Modifiers
