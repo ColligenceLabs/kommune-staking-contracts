@@ -41,9 +41,7 @@ async function main() {
   await upgrades.admin.changeProxyAdmin(Treasury.address, Timelock.address);
 
   const rewardAddress =
-    network.config.chainId === 1001
-      ? gcRewardAddress
-      : "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F";
+    network.config.chainId === 1001 ? gcRewardAddress : Treasury.address;
 
   // NodeManager
   const nodeManager = await ethers.getContractFactory("NodeManager");
