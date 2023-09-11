@@ -40,10 +40,12 @@ const config: HardhatUserConfig = {
   },
   networks: {
     baobab: {
+      chainId: 1001,
       url: "https://public-node-api.klaytnapi.com/v1/baobab",
       accounts: [PRIV_KEY],
     },
     cypress: {
+      chainId: 8217,
       url: "https://public-node-api.klaytnapi.com/v1/cypress",
       accounts: [PRIV_KEY],
     },
