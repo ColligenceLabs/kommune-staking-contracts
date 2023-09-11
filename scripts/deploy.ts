@@ -6,17 +6,22 @@ import { ethers, upgrades, network } from "hardhat";
 
 async function main() {
   //
-  const CNStakingV2 = "0x6aF73c9Da47a7b6d8ba7F82f00BaCeddE953e839";
-  const gcRewardAddress = "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73";
-  const rewardAddress = "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73";
+  const CNStakingV2 =
+    network.config.chainId === 1001
+      ? "0x750D8aa80d13a0b0B6b98F2e0C0c43F3B6E1E756" // "0x6aF73c9Da47a7b6d8ba7F82f00BaCeddE953e839"
+      : "0x2b7894a774ad6d2bcb871edf4edb9c882ecfcfdd";
+  const gcRewardAddress =
+    network.config.chainId === 1001
+      ? "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73"
+      : "0x1688b716de237c88835149f310b61a8e2bee0d4b";
   const minKlayToOperate = ethers.utils.parseEther("1").toString();
   const nodeName = "Kommune";
   const delay = 2 * 24 * 3600; // 2 days
-  // const multisig =
-  //   network.config.chainId === 1001
-  //     ? "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F"
-  //     : "0xf6C49616E680B42d36457D5aD202880a01AA85e1";
-  const multisig = "0x9015fe6Ade4CA2456C0235c14a868bc95037A9A2"; // Peter's Test
+  const multisig =
+    network.config.chainId === 1001
+      ? "0x9015fe6Ade4CA2456C0235c14a868bc95037A9A2" // "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F"
+      : "0xf6C49616E680B42d36457D5aD202880a01AA85e1";
+
   let tx;
   let receipt;
 
@@ -34,6 +39,11 @@ async function main() {
   await Treasury.deployed();
   console.log("Treasury deployed here", Treasury.address);
   await upgrades.admin.changeProxyAdmin(Treasury.address, Timelock.address);
+
+  const rewardAddress =
+    network.config.chainId === 1001
+      ? gcRewardAddress
+      : "0x4aac3447EeB53e14Fd56c8c5842E02Bc07184c5F";
 
   // NodeManager
   const nodeManager = await ethers.getContractFactory("NodeManager");
