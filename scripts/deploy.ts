@@ -4,6 +4,10 @@
 
 import { ethers, upgrades, network } from "hardhat";
 
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 async function main() {
   //
   const CNStakingV2 =
@@ -15,7 +19,7 @@ async function main() {
       ? "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73"
       : "0x1688b716de237c88835149f310b61a8e2bee0d4b";
   const minKlayToOperate = ethers.utils.parseEther("1").toString();
-  const nodeName = "Kommune";
+  const nodeName = "Kommune DAO";
   const delay = 2 * 24 * 3600; // 2 days
   const multisig =
     network.config.chainId === 1001
@@ -35,6 +39,7 @@ async function main() {
   console.log("Timelock V2 deployed here", Timelock.address);
 
   // Treasury
+  await sleep(2000);
   const treasury = await ethers.getContractFactory("Treasury");
   const Treasury = await upgrades.deployProxy(treasury, {
     initializer: "initialize",
@@ -42,6 +47,7 @@ async function main() {
   await Treasury.deployed();
   console.log("Treasury deployed here", Treasury.address);
 
+  await sleep(2000);
   await upgrades.admin.changeProxyAdmin(
     Treasury.address,
     Timelock.address
@@ -53,6 +59,7 @@ async function main() {
     network.config.chainId === 1001 ? gcRewardAddress : Treasury.address;
 
   // NodeManager
+  await sleep(2000);
   const nodeManager = await ethers.getContractFactory("NodeManager");
   const NodeManager = await upgrades.deployProxy(
     nodeManager,
@@ -63,10 +70,13 @@ async function main() {
   );
   await NodeManager.deployed();
   console.log("NodeManager deployed here", NodeManager.address);
+
+  await sleep(2000);
   await upgrades.admin.changeProxyAdmin(NodeManager.address, Timelock.address);
   // console.log("changeProxyAdmin : ", NodeManager.address, Timelock.address);
 
   // KoKlay
+  await sleep(2000);
   const koKlay = await ethers.getContractFactory("KoKlay");
   const KoKlay = await upgrades.deployProxy(
     koKlay,
@@ -77,15 +87,19 @@ async function main() {
   );
   await KoKlay.deployed();
   console.log("KoKlay deployed here", KoKlay.address);
+
+  await sleep(2000);
   await upgrades.admin.changeProxyAdmin(KoKlay.address, Timelock.address);
   // console.log("changeProxyAdmin : ", KoKlay.address, Timelock.address);
 
   // NodeManager Transaction
+  await sleep(2000);
   tx = await NodeManager.setStKlayAddress(KoKlay.address);
   receipt = await tx.wait();
   console.log("NodeManager setStKlayAddress : ", receipt.transactionHash);
 
   // UnStakingReceiver
+  await sleep(2000);
   const unstakingReceiver = await ethers.getContractFactory(
     "UnstakingReceiver"
   );
@@ -94,6 +108,7 @@ async function main() {
   console.log("UnstakingReceiver deployed here", UnstakingReceiver.address);
 
   // NodeHandler
+  await sleep(2000);
   const nodeHandler = await ethers.getContractFactory("NodeHandler");
   const NodeHandler = await upgrades.deployProxy(
     nodeHandler,
@@ -109,26 +124,33 @@ async function main() {
   );
   await NodeHandler.deployed();
   console.log("NodeHandler deployed here", NodeHandler.address);
+
+  await sleep(2000);
   await upgrades.admin.changeProxyAdmin(NodeHandler.address, Timelock.address);
   // console.log("changeProxyAdmin : ", NodeHandler.address, Timelock.address);
 
   // NodeManager Transaction
+  await sleep(2000);
   tx = await NodeManager.addNode(nodeName, NodeHandler.address, rewardAddress);
   receipt = await tx.wait();
   console.log("NodeManager addNode : ", receipt.transactionHash);
 
   // UnStakingReceiver Transaction
+  await sleep(2000);
   tx = await UnstakingReceiver.setHandler(NodeHandler.address, true);
   receipt = await tx.wait();
   console.log("UnstakingReceiver setHandler : ", receipt.transactionHash);
 
   // WKoKlay
+  await sleep(2000);
   const wkoKlay = await ethers.getContractFactory("WKoKlay");
   const WKoKlay = await upgrades.deployProxy(wkoKlay, [KoKlay.address], {
     initializer: "initialize",
   });
   await WKoKlay.deployed();
   console.log("WKoKlay deployed here", WKoKlay.address);
+
+  await sleep(2000);
   await upgrades.admin.changeProxyAdmin(WKoKlay.address, Timelock.address);
   // console.log("changeProxyAdmin : ", WKoKlay.address, Timelock.address);
 
@@ -138,10 +160,12 @@ async function main() {
   // console.log("NodeManager revokeRoles : ", receipt.transactionHash);
 
   // Transfer Ownerships to multisig wallet
+  await sleep(2000);
   tx = await Treasury.transferOwnership(Timelock.address);
   receipt = await tx.wait();
   console.log("Treasury transferOwnership : ", receipt.transactionHash);
 
+  await sleep(2000);
   tx = await NodeManager.transferOwnership(Timelock.address);
   receipt = await tx.wait();
   console.log("NodeManager transferOwnership : ", receipt.transactionHash);
@@ -150,6 +174,7 @@ async function main() {
   // receipt = await tx.wait();
   // console.log("KoKlay transferOwnership : ", receipt.transactionHash);
 
+  await sleep(2000);
   tx = await UnstakingReceiver.transferOwnership(Timelock.address);
   receipt = await tx.wait();
   console.log(
@@ -157,6 +182,7 @@ async function main() {
     receipt.transactionHash
   );
 
+  await sleep(2000);
   tx = await NodeHandler.transferOwnership(Timelock.address);
   receipt = await tx.wait();
   console.log("NodeHandler transferOwnership : ", receipt.transactionHash);
