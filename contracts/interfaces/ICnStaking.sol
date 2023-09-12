@@ -36,4 +36,15 @@ interface ICnStaking {
         uint256,
         uint256
     );
+
+    function getLockupStakingInfo()
+    external
+    view
+    returns (
+        uint256[] memory,
+        uint256[] memory,
+        uint256,
+        uint256,
+        uint256
+    );
 }

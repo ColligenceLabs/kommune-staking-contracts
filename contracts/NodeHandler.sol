@@ -103,7 +103,8 @@ contract NodeHandler is
         nodeManagerAddress = nodeManagerAddress_;
         unstakingReceiver = IUnstakingReceiver(unstakingAddress_);
 
-        gcStaking = node.staking();
+        (, , , gcStaking, ) = node.getLockupStakingInfo();
+        gcStaking += node.staking();
         protocolStaking = 0;
     }
 
@@ -316,7 +317,9 @@ contract NodeHandler is
      * @notice Updates gc staked amount based on staked total
      */
     function updateGcStakedAmount() external onlyOwner nonReentrant {
-        gcStaking = node.staking() - protocolStaking;
+        (, , , uint256 remains, ) = node.getLockupStakingInfo();
+        gcStaking = remains + node.staking() - protocolStaking;
+        // gcStaking = node.staking() - protocolStaking;
         emit UpdateGcStakedAmount(gcStaking);
     }
 
