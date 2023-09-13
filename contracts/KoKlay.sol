@@ -91,7 +91,7 @@ contract KoKlay is
         validAddress(timelock)
     {
         __Context_init_unchained();
-        __KIP7_init_unchained("Kommune KLAY", "koKLAY");
+        __KIP7_init_unchained("Kommune KLAY", "KoKLAY");
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         __ReentrancyGuard_init_unchained();
