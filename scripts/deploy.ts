@@ -13,7 +13,11 @@ async function main() {
   const CNStakingV2 =
     network.config.chainId === 1001
       ? "0x750D8aa80d13a0b0B6b98F2e0C0c43F3B6E1E756" // "0x6aF73c9Da47a7b6d8ba7F82f00BaCeddE953e839"
-      : "0x938b3c69ad69d7ac0d872178f5fd45868784c90d"; // 5M initial lockup
+      : "0x2b7894a774ad6d2bcb871edf4edb9c882ecfcfdd"; // for Kommune DAO
+  const C2Node =
+    network.config.chainId === 1001
+      ? "0x750D8aa80d13a0b0B6b98F2e0C0c43F3B6E1E756" // "0x6aF73c9Da47a7b6d8ba7F82f00BaCeddE953e839"
+      : "0x938b3c69ad69d7ac0d872178f5fd45868784c90d"; // 5M initial lockup by Foundation
   const gcRewardAddress =
     network.config.chainId === 1001
       ? "0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73"
@@ -114,6 +118,7 @@ async function main() {
     nodeHandler,
     [
       CNStakingV2,
+      C2Node,
       gcRewardAddress,
       NodeManager.address,
       UnstakingReceiver.address,

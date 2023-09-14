@@ -41,6 +41,7 @@ contract NodeHandler is
 
     /// @notice Node
     ICnStaking private node;
+    ICnStaking private c2node;
     /// @notice Unstaking receiver that receives claimed KLAY from node
     IUnstakingReceiver private unstakingReceiver;
 
@@ -83,6 +84,7 @@ contract NodeHandler is
      */
     function initialize(
         address nodeAddress_,
+        address c2nodeAddress_,
         address gcRewardAddress_,
         address nodeManagerAddress_,
         address unstakingAddress_
@@ -91,6 +93,7 @@ contract NodeHandler is
         initializer
         nonReentrant
         validAddress(nodeAddress_)
+        validAddress(c2nodeAddress_)
         validAddress(gcRewardAddress_)
         validAddress(nodeManagerAddress_)
         validAddress(unstakingAddress_)
@@ -99,12 +102,17 @@ contract NodeHandler is
         __ReentrancyGuard_init_unchained();
 
         node = ICnStaking(nodeAddress_);
+        c2node = ICnStaking(c2nodeAddress_);
         gcRewardAddress = gcRewardAddress_;
         nodeManagerAddress = nodeManagerAddress_;
         unstakingReceiver = IUnstakingReceiver(unstakingAddress_);
 
+        // Consider two CNStakingV2 - C1 & C2 - nodes
         (, , , gcStaking, ) = node.getLockupStakingInfo();
         gcStaking += node.staking();
+        (, , , uint256 initLockup, ) = c2node.getLockupStakingInfo();
+        gcStaking += initLockup;
+        gcStaking += c2node.staking();
         protocolStaking = 0;
     }
 
@@ -318,7 +326,8 @@ contract NodeHandler is
      */
     function updateGcStakedAmount() external onlyOwner nonReentrant {
         (, , , uint256 remains, ) = node.getLockupStakingInfo();
-        gcStaking = remains + node.staking() - protocolStaking;
+        (, , , uint256 c2remains, ) = c2node.getLockupStakingInfo();
+        gcStaking = remains + node.staking() + c2remains + c2node.staking() - protocolStaking;
         // gcStaking = node.staking() - protocolStaking;
         emit UpdateGcStakedAmount(gcStaking);
     }
