@@ -9,3 +9,6 @@ typechain-types
 cache
 artifacts
 
+/.idea
+/.openzeppelin
+/flatten
