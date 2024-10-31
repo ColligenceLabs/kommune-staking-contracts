@@ -1,5 +1,5 @@
 /*
- * npx hardhat run --network < baobab | cypress > scripts/dencodeData.ts
+ * npx hardhat run --network < baobab | cypress > scripts/utils/dencodeData.ts
  */
 
 import { ethers } from "ethers";

@@ -1,3 +1,7 @@
+/*
+ * npx hardhat run --network < baobab | cypress > scripts/utils/owner.ts
+ */
+
 import { ethers, network, upgrades } from "hardhat";
 
 /*

@@ -1,5 +1,5 @@
 /*
- * npx hardhat run --network < baobab | cypress > scripts/getProxyAdmin.ts
+ * npx hardhat run --network < baobab | cypress > scripts/utils/getProxyAdmin.ts
  */
 
 import { ethers, network, upgrades } from "hardhat";

@@ -1,5 +1,5 @@
 /*
- * npx hardhat run --network < baobab | cypress > scripts/makeData.ts
+ * npx hardhat run --network < baobab | cypress > scripts/utils/makeData.ts
  */
 
 import { ethers } from "ethers";

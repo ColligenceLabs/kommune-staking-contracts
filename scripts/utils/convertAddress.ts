@@ -1,5 +1,5 @@
 /*
- * npx hardhat run --network baobab scripts/convertAddress.ts
+ * npx hardhat run --network baobab scripts/utils/convertAddress.ts
  */
 
 import { ethers } from "hardhat";
