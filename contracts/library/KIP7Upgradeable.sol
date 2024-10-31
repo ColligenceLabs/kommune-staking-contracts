@@ -63,6 +63,14 @@ IKIP7Metadata
         return _symbol;
     }
 
+    // Use when upgrade KoKAIA to change the ticker !!
+    function __KIP7_change_ticker(string memory name_, string memory symbol_)
+    internal
+    {
+        _name = name_;
+        _symbol = symbol_;
+    }
+
     /**
      * @dev Returns the number of decimals used to get its user representation.
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
