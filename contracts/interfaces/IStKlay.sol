@@ -23,7 +23,11 @@ interface IStKlay is IKIP7 {
 
     function getSharesByKlay(uint256 amount) external view returns (uint256);
 
+    function protectedGetSharesByKlay(uint256 amount) external view returns (uint256);
+
     function getKlayByShares(uint256 amount) external view returns (uint256);
+
+    function protectedGetKlayByShares(uint256 amount) external view returns (uint256);
 
     function sharesOf(address user) external view returns (uint256);
 }

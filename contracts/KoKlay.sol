@@ -232,12 +232,22 @@ contract KoKlay is
         return _getSharesByKlay(amount);
     }
 
+    function protectedGetSharesByKlay(uint256 amount) external view returns (uint256) {
+        require(canSafeRead(), "e/ro-reentrancy");
+        return _getSharesByKlay(amount);
+    }
+
     /**
      * @notice Returns amount of shares for corresponding stKlay
      * @dev Klay --> Shares
      * @param amount amount of stKlay to convert
      */
     function getKlayByShares(uint256 amount) external view returns (uint256) {
+        return _getKlayByShares(amount);
+    }
+
+    function protectedGetKlayByShares(uint256 amount) external view returns (uint256) {
+        require(canSafeRead(), "e/ro-reentrancy");
         return _getKlayByShares(amount);
     }
 
