@@ -16,7 +16,7 @@ import "./interfaces/INodeHandler.sol";
  * @notice Block reward for staking KLAY accumulated in NodeHandler first,
  *         and then distributed to GC Node and NodeManager contract in proportion to the staked amount
  */
-contract NodeHandler is
+contract NodeHandlerV2 is
     INodeHandler,
     OwnableUpgradeable,
     ReentrancyGuardUpgradeable
@@ -152,8 +152,8 @@ contract NodeHandler is
         require(!isDisconnected, "node is unavailable");
 
         protocolStaking += amount;
-        // for CnV2
-        node.stakeKlay{value: amount}();
+        // for CnV3
+        node.delegate{value: amount}();
         emit Staked(amount);
     }
 
