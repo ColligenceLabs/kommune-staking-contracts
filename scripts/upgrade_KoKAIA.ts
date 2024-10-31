@@ -42,11 +42,8 @@ async function main() {
     "Proxy Admin"
   );
 
-  // if (network.config.chainId === 8217) {
-  //   await sleep(2000);
-  //   await upgrades.admin.changeProxyAdmin(KoKaia.address, Timelock);
-  //   console.log("changeProxyAdmin : ", KoKaia.address, Timelock);
-  // }
+  // 1. Check the result of the upgrading
+  // 2. run a script to changeProxyAdmin to Timelock
 }
 
 main();
