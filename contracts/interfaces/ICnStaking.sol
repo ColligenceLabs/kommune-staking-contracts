@@ -18,6 +18,7 @@ interface ICnStaking {
 
     /// @notice stake KLAY
     function stakeKlay() external payable;
+    function delegate() external payable;
 
     /// @notice 7 days after "approveStakingWithdrawal" has been requested, admins can call this function for actual withdrawal. However, it's only available for 7 days
     /// @param _approvedWithdrawalId the withdrawal ID to excute. The ID is acquired at the event log of ApproveStakingWithdrawal
