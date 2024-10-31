@@ -19,6 +19,15 @@ const config: HardhatUserConfig = {
         },
       },
       {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
         version: "0.4.24",
         settings: {
           optimizer: {
@@ -41,12 +50,13 @@ const config: HardhatUserConfig = {
   networks: {
     baobab: {
       chainId: 1001,
-      url: "https://public-node-api.klaytnapi.com/v1/baobab",
+      url: "https://public-en-kairos.node.kaia.io",
       accounts: [PRIV_KEY],
     },
     cypress: {
       chainId: 8217,
-      url: "https://public-node-api.klaytnapi.com/v1/cypress",
+      url: "https://public-en.node.kaia.io",
+      // url: "https://klaytn-en.kommunedao.xyz:8651",
       accounts: [PRIV_KEY],
     },
   },
