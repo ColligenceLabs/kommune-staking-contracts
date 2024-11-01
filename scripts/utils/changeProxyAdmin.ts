@@ -17,7 +17,7 @@ async function main() {
             : "0xa1338309658d3da331c747518d0bb414031f22fd"; // "0x42D4a59785a477588e464ac7421c385619087911";
 
 
-    if (network.config.chainId === 8217 && KoKaia) {
+    if (network.config.chainId === 8217) {
       await upgrades.admin.changeProxyAdmin(KoKaia, Timelock);
       console.log("changeProxyAdmin : ", KoKaia, Timelock);
     }
