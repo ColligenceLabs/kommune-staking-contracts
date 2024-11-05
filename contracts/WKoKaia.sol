@@ -148,4 +148,9 @@ contract WKoKaia is
     {
         unwrappedAmount = stKlay.protectedGetKlayByShares(amount * 10**9);
     }
+
+    // KLAY -> KAIA
+    function setTicker() public {
+        __KIP7_change_ticker("Kommune Wrapped KoKAIA", "wKoKAIA");
+    }
 }
