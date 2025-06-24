@@ -1,6 +1,8 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@openzeppelin/hardhat-upgrades";
+import { ethers } from "hardhat";
+
 require("dotenv").config();
 
 const { RPC_API_KEY, PRIV_KEY, ETHERSCAN_API_KEY } = process.env;
@@ -52,6 +54,8 @@ const config: HardhatUserConfig = {
       chainId: 1001,
       url: "https://public-en-kairos.node.kaia.io",
       accounts: [PRIV_KEY],
+      gasPrice: 50000000000,
+      gasLimit: 3000000,
     },
     cypress: {
       chainId: 8217,

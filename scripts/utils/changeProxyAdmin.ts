@@ -17,9 +17,19 @@ async function main() {
             : "0xa1338309658d3da331c747518d0bb414031f22fd"; // "0x42D4a59785a477588e464ac7421c385619087911";
 
 
+    const wKoKaia =
+        network.config.chainId === 1001
+            ? "0xE019c5f1dDAF64A30d7d0B036b746aCbD4Aa8Af8"
+            : "0xdEC2Cc84f0a37Ef917f63212FE8ba7494b0E4B15";
+
     if (network.config.chainId === 8217) {
-      await upgrades.admin.changeProxyAdmin(KoKaia, Timelock);
-      console.log("changeProxyAdmin : ", KoKaia, Timelock);
+        // Done
+        // await upgrades.admin.changeProxyAdmin(KoKaia, Timelock);
+        // console.log("changeProxyAdmin : ", KoKaia, Timelock);
+
+        // Not Yet
+        await upgrades.admin.changeProxyAdmin(wKoKaia, Timelock);
+        console.log("changeProxyAdmin : ", wKoKaia, Timelock);
     }
 }
 

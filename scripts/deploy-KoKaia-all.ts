@@ -93,7 +93,7 @@ async function main() {
   console.log("KoKaia deployed here", KoKaia.address);
 
   await sleep(2000);
-  await upgrades.admin.changeProxyAdmin(KoKlay.address, Timelock.address);
+  await upgrades.admin.changeProxyAdmin(KoKaia.address, Timelock.address);
   // console.log("changeProxyAdmin : ", KoKlay.address, Timelock.address);
 
   // NodeManager Transaction
